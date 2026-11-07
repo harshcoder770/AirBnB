@@ -1,0 +1,366 @@
+<!-- Navbar Styles -->
+<style>
+    .airbnb-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: #ffffff;
+        border-bottom: 1px solid #ebebeb;
+        padding: 0 48px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .navbar-inner {
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+    }
+
+    /* ===== LOGO ===== */
+    .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: #FF385C;
+        flex-shrink: 0;
+    }
+
+    .nav-logo i {
+        font-size: 32px;
+        transition: transform 0.2s ease;
+    }
+
+    .nav-logo:hover i {
+        transform: scale(1.05);
+    }
+
+    .nav-logo span {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    /* ===== SEARCH PILL ===== */
+    .nav-search {
+        display: flex;
+        align-items: center;
+        background: #ffffff;
+        border: 1px solid #dddddd;
+        border-radius: 40px;
+        padding: 6px 8px 6px 18px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        cursor: pointer;
+        transition: box-shadow 0.2s ease;
+        flex-shrink: 1;
+    }
+
+    .nav-search:hover {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+    }
+
+    .search-segment {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: #222222;
+        padding: 0 12px;
+        border-right: 1px solid #e0e0e0;
+        white-space: nowrap;
+    }
+
+    .search-segment.light {
+        color: #717171;
+        font-weight: 400;
+        border-right: none;
+    }
+
+    .search-icon-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FF385C, #D70466);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        flex-shrink: 0;
+        margin-left: 4px;
+    }
+
+    .search-icon-btn i {
+        font-size: 11px;
+    }
+
+    /* ===== USER ACTIONS (RIGHT) ===== */
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+        position: relative;
+    }
+
+    .nav-host-btn {
+        text-decoration: none;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: #222222;
+        padding: 10px 14px;
+        border-radius: 22px;
+        transition: background 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .nav-host-btn:hover {
+        background: #f7f7f7;
+    }
+
+    /* Menu Pill Button */
+    .nav-user-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid #dddddd;
+        border-radius: 24px;
+        padding: 5px 6px 5px 12px;
+        cursor: pointer;
+        transition: box-shadow 0.2s ease;
+        background: #ffffff;
+        user-select: none;
+    }
+
+    .nav-user-pill:hover,
+    .nav-user-pill.active {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+    }
+
+    .nav-user-pill i.fa-bars {
+        font-size: 14px;
+        color: #444444;
+    }
+
+    .user-avatar-circle {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #717171;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+    }
+
+    /* ===== DROPDOWN PANEL ===== */
+    .user-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 240px;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        border: 1px solid #eeeeee;
+        padding: 8px 0;
+        display: none; /* Controlled by JS */
+        flex-direction: column;
+        z-index: 1100;
+        animation: dropDownSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .user-dropdown-menu.show {
+        display: flex;
+    }
+
+    @keyframes dropDownSlide {
+        from {
+            opacity: 0;
+            transform: translateY(-8px) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .dropdown-item {
+        padding: 12px 18px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        color: #222222;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: background 0.15s ease;
+    }
+
+    .dropdown-item:hover {
+        background: #f7f7f7;
+    }
+
+    .dropdown-item.bold-text {
+        font-weight: 700;
+    }
+
+    .dropdown-divider {
+        height: 1px;
+        background: #eeeeee;
+        margin: 6px 0;
+    }
+
+    /* ===== RESPONSIVE MEDIA QUERIES (Fixes 770px - 810px overflow) ===== */
+    
+    /* Tablet range: 769px to 950px */
+    @media (max-width: 950px) {
+        .airbnb-navbar {
+            padding: 0 20px;
+        }
+
+        /* Hide the 3rd search segment earlier so it never breaks screen */
+        .search-segment.light {
+            display: none;
+        }
+
+        .search-segment:nth-child(2) {
+            border-right: none;
+        }
+
+        .nav-host-btn {
+            font-size: 13px;
+            padding: 8px 10px;
+        }
+    }
+
+    /* Small Tablet range: 768px to 850px */
+    @media (max-width: 850px) {
+        .search-segment:nth-child(2) {
+            display: none;
+        }
+
+        .search-segment {
+            border-right: none;
+            padding: 0 8px;
+        }
+
+        .nav-logo span {
+            font-size: 18px;
+        }
+    }
+
+    /* Mobile: 768px and down */
+    @media (max-width: 768px) {
+        .airbnb-navbar {
+            padding: 0 16px;
+        }
+
+        .navbar-inner {
+            height: 68px;
+        }
+
+        .nav-logo span {
+            display: none; /* Icon only */
+        }
+
+        .nav-host-btn {
+            display: none; /* Moved inside the user dropdown */
+        }
+    }
+</style>
+
+<!-- Navbar Markup -->
+<nav class="airbnb-navbar">
+    <div class="navbar-inner">
+
+        <!-- Logo -->
+        <a href="/listings" class="nav-logo">
+            <i class="fa-brands fa-airbnb"></i>
+            <span>airbnb</span>
+        </a>
+
+        <!-- Search Bar -->
+        <div class="nav-search">
+            <span class="search-segment">Anywhere</span>
+            <span class="search-segment">Any week</span>
+            <span class="search-segment light">Add guests</span>
+            <button class="search-icon-btn" aria-label="Search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+
+        <!-- Right Side: Create Listing + User Menu -->
+        <div class="nav-actions">
+            <a href="/listings/new" class="nav-host-btn">Airbnb your home</a>
+            
+            <!-- User Menu Pill Button -->
+            <div class="nav-user-pill" id="userMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+                <div class="user-avatar-circle">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+
+            <!-- Floating Side Dropdown Panel -->
+            <div class="user-dropdown-menu" id="userDropdown">
+                <a href="/signup" class="dropdown-item bold-text">
+                    <i class="fa-regular fa-user" style="width: 16px;"></i> Sign up
+                </a>
+                <a href="/login" class="dropdown-item">
+                    <i class="fa-solid fa-arrow-right-to-bracket" style="width: 16px;"></i> Log in
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/listings/new" class="dropdown-item">
+                    <i class="fa-solid fa-house-chimney" style="width: 16px;"></i> Airbnb your home
+                </a>
+                <a href="/listings" class="dropdown-item">
+                    <i class="fa-solid fa-list" style="width: 16px;"></i> Explore listings
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <i class="fa-regular fa-circle-question" style="width: 16px;"></i> Help Centre
+                </a>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+<!-- JavaScript to control the menu -->
+<script>
+    (function() {
+        const menuBtn = document.getElementById('userMenuBtn');
+        const dropdown = document.getElementById('userDropdown');
+
+        if (!menuBtn || !dropdown) return;
+
+        // Toggle open/close on pill click
+        menuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isOpen = dropdown.classList.contains('show');
+            if (isOpen) {
+                dropdown.classList.remove('show');
+                menuBtn.classList.remove('active');
+            } else {
+                dropdown.classList.add('show');
+                menuBtn.classList.add('active');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target) && !menuBtn.contains(e.target)) {
+                dropdown.classList.remove('show');
+                menuBtn.classList.remove('active');
+            }
+        });
+    })();
+</script>

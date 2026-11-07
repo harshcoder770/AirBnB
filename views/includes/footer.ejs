@@ -1,0 +1,296 @@
+<!-- Footer Styles -->
+<style>
+    .airbnb-footer {
+        background-color: #f7f7f7;
+        border-top: 1px solid #ebebeb;
+        padding: 48px 48px 28px;
+        margin-top: auto;
+        font-family: 'DM Sans', sans-serif;
+        color: #222222;
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    /* ===== TOP COLUMNS ===== */
+    .footer-top-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 36px;
+        padding-bottom: 36px;
+        border-bottom: 1px solid #dddddd;
+    }
+
+    .footer-col h4 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: #1a1a2e;
+        letter-spacing: 0.3px;
+    }
+
+    .footer-col ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .footer-col ul li a {
+        text-decoration: none;
+        font-size: 14px;
+        color: #555555;
+        transition: color 0.2s ease, text-decoration 0.2s;
+    }
+
+    .footer-col ul li a:hover {
+        color: #1a1a2e;
+        text-decoration: underline;
+    }
+
+    /* ===== BOTTOM BAR ===== */
+    .footer-bottom {
+        padding-top: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px;
+    }
+
+    .footer-bottom-left {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 14px;
+        color: #717171;
+    }
+
+    .footer-bottom-left a {
+        color: #717171;
+        text-decoration: none;
+    }
+
+    .footer-bottom-left a:hover {
+        text-decoration: underline;
+        color: #222;
+    }
+
+    /* ===== AUTHOR & SOCIAL PROFILES ===== */
+    .footer-creator-bar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .creator-badge {
+        font-size: 14px;
+        color: #444444;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .creator-badge .heart-icon {
+        color: #FF385C;
+        font-size: 13px;
+        animation: pulse 1.6s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+    }
+
+    .creator-badge strong {
+        color: #1a1a2e;
+        font-weight: 700;
+    }
+
+    /* Social Icons Row */
+    .social-links {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .social-icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #555555;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        position: relative;
+    }
+
+    .social-icon-btn i {
+        font-size: 16px;
+    }
+
+    .social-icon-btn svg {
+        width: 17px;
+        height: 17px;
+        fill: currentColor;
+    }
+
+    /* Hover States for Each Brand */
+    .social-icon-btn.github:hover {
+        background: #24292e;
+        color: #ffffff;
+        border-color: #24292e;
+        transform: translateY(-2px);
+    }
+
+    .social-icon-btn.linkedin:hover {
+        background: #0A66C2;
+        color: #ffffff;
+        border-color: #0A66C2;
+        transform: translateY(-2px);
+    }
+
+    .social-icon-btn.instagram:hover {
+        background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        color: #ffffff;
+        border-color: transparent;
+        transform: translateY(-2px);
+    }
+
+    .social-icon-btn.leetcode:hover {
+        background: #FFA116;
+        color: #ffffff;
+        border-color: #FFA116;
+        transform: translateY(-2px);
+    }
+
+    /* ===== RESPONSIVE MEDIA QUERIES ===== */
+    @media (max-width: 900px) {
+        .airbnb-footer {
+            padding: 36px 24px 24px;
+        }
+
+        .footer-top-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+        }
+    }
+
+    @media (max-width: 650px) {
+        .footer-top-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .footer-bottom {
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .footer-creator-bar {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+</style>
+
+<!-- Footer Markup -->
+<footer class="airbnb-footer">
+    
+    <!-- Top Links Columns -->
+    <div class="footer-top-grid">
+        <div class="footer-col">
+            <h4>Support</h4>
+            <ul>
+                <li><a href="#">Help Centre</a></li>
+                <li><a href="#">AirCover Protection</a></li>
+                <li><a href="#">Anti-discrimination</a></li>
+                <li><a href="#">Disability support</a></li>
+                <li><a href="#">Cancellation options</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Hosting</h4>
+            <ul>
+                <li><a href="/listings/new">Airbnb your home</a></li>
+                <li><a href="#">AirCover for Hosts</a></li>
+                <li><a href="#">Hosting resources</a></li>
+                <li><a href="#">Community forum</a></li>
+                <li><a href="#">Hosting responsibly</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Airbnb</h4>
+            <ul>
+                <li><a href="#">Newsroom</a></li>
+                <li><a href="#">New features</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Investors</a></li>
+                <li><a href="#">Airbnb.org emergency stays</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Bottom Bar with Creator Credit & Social Links -->
+    <div class="footer-bottom">
+        
+        <!-- Left: Copyright & Legal -->
+        <div class="footer-bottom-left">
+            <span>&copy; 2026 Airbnb, Inc.</span>
+            <span>·</span>
+            <a href="#">Privacy</a>
+            <span>·</span>
+            <a href="#">Terms</a>
+            <span>·</span>
+            <a href="#">Sitemap</a>
+        </div>
+
+        <!-- Right: Creator Credit & 4 Profile Logos -->
+        <div class="footer-creator-bar">
+            
+            <!-- Credit Badge -->
+            <div class="creator-badge">
+                Created with <i class="fa-solid fa-heart heart-icon"></i> by <strong>Harshal Bhagat</strong>
+            </div>
+
+            <!-- Social Links (Replace href with your actual profile links) -->
+            <div class="social-links">
+                <!-- GitHub -->
+                <a href="https://github.com/harshcoder770" target="_blank" rel="noopener noreferrer" class="social-icon-btn github" title="GitHub">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+
+                <!-- LinkedIn -->
+                <a href="https://linkedin.com/in/bhagatharshal" target="_blank" rel="noopener noreferrer" class="social-icon-btn linkedin" title="LinkedIn">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                </a>
+
+                <!-- Instagram -->
+                <a href="https://instagram.com/_oyeee_harshallll_" target="_blank" rel="noopener noreferrer" class="social-icon-btn instagram" title="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <!-- LeetCode (Official SVG Logo) -->
+                <a href="https://leetcode.com/u/harshcoder770/" target="_blank" rel="noopener noreferrer" class="social-icon-btn leetcode" title="LeetCode">
+                    <svg viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/>
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>

@@ -1,0 +1,1044 @@
+<% layout('/layouts/boilerplate') -%>
+
+<style>
+    /* ===== PAGE WRAPPER ===== */
+    .show-wrapper {
+        padding: 24px 48px 60px;
+        max-width: 1120px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    /* ===== BACK BUTTON ===== */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: #717171;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: #ffffff;
+        border: 1px solid #ebebeb;
+        width: fit-content;
+        transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+        color: #FF385C;
+        border-color: #FF385C;
+        background: #fff5f7;
+        transform: translateX(-3px);
+    }
+
+    /* ===== TITLE & SUBTITLE ===== */
+    .show-header {
+        margin-bottom: 20px;
+    }
+
+    .listing-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(24px, 4vw, 34px);
+        font-weight: 800;
+        color: #1a1a2e;
+        margin-bottom: 8px;
+        line-height: 1.25;
+        word-break: break-word;
+    }
+
+    .listing-subtitle {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        color: #555555;
+    }
+
+    .rating-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 700;
+        color: #1a1a2e;
+    }
+
+    .rating-badge i {
+        color: #FFB400;
+        font-size: 13px;
+    }
+
+    .location-link {
+        color: #222222;
+        font-weight: 600;
+        text-decoration: underline;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .location-link i {
+        color: #FF385C;
+        font-size: 13px;
+    }
+
+    /* ===== HERO IMAGE ===== */
+    .image-container {
+        width: 100%;
+        height: 440px;
+        border-radius: 18px;
+        overflow: hidden;
+        margin-bottom: 28px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        background: #f0f0f0;
+    }
+
+    .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* ===== HOST ACTION BAR (EDIT & DELETE) ===== */
+    .host-actions-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 32px;
+        padding: 14px 20px;
+        background: #ffffff;
+        border: 1px solid #ebebeb;
+        border-radius: 14px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .host-actions-title {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: #717171;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .host-actions-btns {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-action-edit {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 18px;
+        background: #1a1a2e;
+        color: #ffffff;
+        text-decoration: none;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-action-edit:hover {
+        background: #333333;
+        transform: translateY(-1px);
+    }
+
+    .btn-action-delete {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 18px;
+        background: #ffffff;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-action-delete:hover {
+        background: #fef2f2;
+        border-color: #dc2626;
+        transform: translateY(-1px);
+    }
+
+    /* ===== MAIN TWO-COLUMN GRID ===== */
+    .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 48px;
+        margin-bottom: 48px;
+    }
+
+    /* Left Details Column */
+    .details-left {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        min-width: 0; /* Prevents flex child overflow */
+    }
+
+    .host-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #ebebeb;
+    }
+
+    .host-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1a1a2e, #3a3a5e);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .host-card-info h3 {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a2e;
+    }
+
+    .host-card-info p {
+        font-size: 13px;
+        color: #717171;
+    }
+
+    .highlights {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid #ebebeb;
+    }
+
+    .highlight-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .highlight-item i {
+        font-size: 20px;
+        color: #1a1a2e;
+        width: 24px;
+        text-align: center;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+    .highlight-text h4 {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1a1a2e;
+    }
+
+    .highlight-text p {
+        font-size: 13px;
+        color: #717171;
+        margin-top: 2px;
+    }
+
+    .about-place h3 {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #1a1a2e;
+    }
+
+    .about-place p {
+        font-size: 15px;
+        line-height: 1.7;
+        color: #484848;
+        word-break: break-word;
+    }
+
+    /* Right Sticky Booking Card */
+    .price-card {
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+        background: #ffffff;
+        border: 1px solid #dddddd;
+        border-radius: 16px;
+        padding: 26px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        box-sizing: border-box;
+    }
+
+    .price-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 20px;
+    }
+
+    .price-amount {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a1a2e;
+    }
+
+    .price-night {
+        font-size: 14px;
+        color: #717171;
+        font-weight: 400;
+    }
+
+    .booking-box {
+        border: 1px solid #b0b0b0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 18px;
+    }
+
+    .booking-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-bottom: 1px solid #b0b0b0;
+    }
+
+    .booking-cell {
+        padding: 10px 14px;
+    }
+
+    .booking-cell:first-child {
+        border-right: 1px solid #b0b0b0;
+    }
+
+    .booking-cell label {
+        display: block;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #222222;
+        letter-spacing: 0.5px;
+    }
+
+    .booking-cell span {
+        font-size: 13px;
+        color: #717171;
+    }
+
+    .reserve-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #FF385C, #D70466);
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        box-shadow: 0 4px 14px rgba(255, 56, 92, 0.25);
+    }
+
+    .reserve-btn:hover {
+        opacity: 0.95;
+        transform: translateY(-1px);
+    }
+
+    .price-note {
+        text-align: center;
+        font-size: 12px;
+        color: #717171;
+        margin-top: 12px;
+    }
+
+    /* ===== REVIEWS / COMMENTS SECTION ===== */
+    .reviews-section {
+        padding-top: 40px;
+        border-top: 1px solid #ebebeb;
+        margin-top: 20px;
+    }
+
+    .reviews-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 24px;
+    }
+
+    .reviews-header i {
+        color: #FFB400;
+        font-size: 20px;
+    }
+
+    .leave-review-card {
+        background: #ffffff;
+        border: 1px solid #ebebeb;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 32px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .leave-review-card h4 {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 14px;
+    }
+
+    .rating-select-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .rating-select-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #555555;
+    }
+
+    .star-rating-inputs {
+        display: flex;
+        gap: 4px;
+        color: #FFB400;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .review-textarea {
+        width: 100%;
+        min-height: 95px;
+        padding: 12px 14px;
+        border: 1px solid #dddddd;
+        border-radius: 10px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        outline: none;
+        resize: vertical;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+    }
+
+    .review-textarea:focus {
+        border-color: #FF385C;
+    }
+
+    .review-submit-btn {
+        margin-top: 12px;
+        padding: 10px 22px;
+        background: #1a1a2e;
+        color: #ffffff;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .review-submit-btn:hover {
+        background: #333333;
+    }
+
+    .reviews-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .review-card {
+        background: #ffffff;
+        border: 1px solid #ebebeb;
+        border-radius: 14px;
+        padding: 20px;
+    }
+
+    .review-user-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .review-user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #475569;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .review-user-info h5 {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1a1a2e;
+    }
+
+    .review-user-info span {
+        font-size: 12px;
+        color: #888888;
+    }
+
+    .review-stars {
+        color: #FFB400;
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .review-comment {
+        font-size: 14px;
+        color: #444444;
+        line-height: 1.6;
+        word-break: break-word;
+    }
+
+    /* ===== WHERE YOU'LL BE ===== */
+    .location-section {
+        padding-top: 40px;
+        border-top: 1px solid #ebebeb;
+        margin-top: 40px;
+    }
+
+    .location-section h3 {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 12px;
+    }
+
+    .location-detail {
+        font-size: 15px;
+        color: #555555;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .location-detail i {
+        color: #FF385C;
+        font-size: 16px;
+    }
+
+    /* ===== DELETE POP-UP MODAL ===== */
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+
+    .modal-backdrop.show-modal {
+        display: flex;
+        animation: modalFadeIn 0.2s ease-out;
+    }
+
+    .modal-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 32px 24px;
+        max-width: 420px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+        animation: modalPopUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        box-sizing: border-box;
+    }
+
+    @keyframes modalPopUp {
+        from {
+            opacity: 0;
+            transform: scale(0.92) translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    @keyframes modalFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: none;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #717171;
+        font-size: 16px;
+        transition: background 0.2s;
+    }
+
+    .modal-close-btn:hover {
+        background: #f7f7f7;
+        color: #222222;
+    }
+
+    .modal-icon-wrap {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: #FEE2E2;
+        color: #DC2626;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin: 0 auto 16px;
+    }
+
+    .modal-title {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 8px;
+    }
+
+    .modal-desc {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        color: #666666;
+        line-height: 1.6;
+        margin-bottom: 24px;
+    }
+
+    .modal-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .btn-modal-cancel {
+        padding: 12px;
+        background: #f1f5f9;
+        color: #475569;
+        border: none;
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-modal-cancel:hover {
+        background: #e2e8f0;
+    }
+
+    .btn-modal-confirm {
+        width: 100%;
+        padding: 12px;
+        background: #DC2626;
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+        transition: all 0.2s;
+    }
+
+    .btn-modal-confirm:hover {
+        background: #b91c1c;
+        transform: translateY(-1px);
+    }
+
+    /* ===== RESPONSIVE MEDIA QUERIES ===== */
+    @media (max-width: 1024px) {
+        .show-wrapper {
+            padding: 24px 32px 60px;
+        }
+
+        .content-grid {
+            grid-template-columns: 1fr 340px;
+            gap: 32px;
+        }
+
+        .image-container {
+            height: 380px;
+        }
+    }
+
+    @media (max-width: 850px) {
+        .content-grid {
+            grid-template-columns: 1fr;
+            gap: 36px;
+        }
+
+        .price-card {
+            position: static;
+        }
+
+        .reviews-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .show-wrapper {
+            padding: 16px 16px 48px;
+        }
+
+        .image-container {
+            height: 250px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+        }
+
+        .host-actions-bar {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+        }
+
+        .host-actions-btns {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .btn-action-edit, .btn-action-delete {
+            justify-content: center;
+        }
+
+        .leave-review-card {
+            padding: 18px 16px;
+        }
+    }
+
+    @media (max-width: 380px) {
+        .modal-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="show-wrapper">
+
+    <!-- Back Button to All Listings -->
+    <a href="/listings" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i> All Listings
+    </a>
+
+    <!-- Title and Subtitle -->
+    <div class="show-header">
+        <h1 class="listing-title"><%= listing.title %></h1>
+        <div class="listing-subtitle">
+            <span class="rating-badge">
+                <i class="fa-solid fa-star"></i> 4.9 · 14 reviews
+            </span>
+            <span>·</span>
+            <span class="location-link">
+                <i class="fa-solid fa-location-dot"></i>
+                <%= listing.location %>, <%= listing.country %>
+            </span>
+        </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="image-container">
+        <img src="<%= listing.image %>" alt="<%= listing.title %>" loading="lazy">
+    </div>
+
+    <!-- Host Control Bar: Edit & Custom Delete Trigger -->
+    <div class="host-actions-bar">
+        <span class="host-actions-title">
+            <i class="fa-solid fa-sliders"></i> Listing Controls
+        </span>
+        <div class="host-actions-btns">
+            <a href="/listings/<%= listing._id %>/edit" class="btn-action-edit">
+                <i class="fa-regular fa-pen-to-square"></i> Edit
+            </a>
+            <button type="button" class="btn-action-delete" id="openDeleteModalBtn">
+                <i class="fa-regular fa-trash-can"></i> Delete
+            </button>
+        </div>
+    </div>
+
+    <!-- Two-Column Main Content -->
+    <div class="content-grid">
+
+        <!-- Left Column: Details -->
+        <div class="details-left">
+            <!-- Host Info -->
+            <div class="host-card">
+                <div class="host-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="host-card-info">
+                    <h3>Hosted by Property Host</h3>
+                    <p>Superhost · 3 years hosting experience</p>
+                </div>
+            </div>
+
+            <!-- Highlights -->
+            <div class="highlights">
+                <div class="highlight-item">
+                    <i class="fa-solid fa-door-open"></i>
+                    <div class="highlight-text">
+                        <h4>Self check-in</h4>
+                        <p>Check yourself in with the digital keypad.</p>
+                    </div>
+                </div>
+                <div class="highlight-item">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <div class="highlight-text">
+                        <h4>Free cancellation</h4>
+                        <p>Cancel up to 48 hours before check-in for a full refund.</p>
+                    </div>
+                </div>
+                <div class="highlight-item">
+                    <i class="fa-solid fa-medal"></i>
+                    <div class="highlight-text">
+                        <h4>Superhost</h4>
+                        <p>Superhosts are experienced and highly rated hosts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Place / Description -->
+            <div class="about-place">
+                <h3>About this place</h3>
+                <p><%= listing.description %></p>
+            </div>
+        </div>
+
+        <!-- Right Column: Booking Card -->
+        <div>
+            <div class="price-card">
+                <div class="price-card-header">
+                    <div>
+                        <span class="price-amount">&#8377;<%= listing.price.toLocaleString('en-IN') %></span>
+                        <span class="price-night"> / night</span>
+                    </div>
+                    <span class="rating-badge">
+                        <i class="fa-solid fa-star"></i> 4.9
+                    </span>
+                </div>
+
+                <div class="booking-box">
+                    <div class="booking-row">
+                        <div class="booking-cell">
+                            <label>Check-in</label>
+                            <span>Add date</span>
+                        </div>
+                        <div class="booking-cell">
+                            <label>Checkout</label>
+                            <span>Add date</span>
+                        </div>
+                    </div>
+                    <div class="booking-cell">
+                        <label>Guests</label>
+                        <span>1 guest</span>
+                    </div>
+                </div>
+
+                <button class="reserve-btn">Reserve Now</button>
+                <p class="price-note">You won't be charged yet</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-section">
+        <div class="reviews-header">
+            <i class="fa-solid fa-star"></i>
+            <span>4.9 · 14 Reviews</span>
+        </div>
+
+        <!-- Leave a Review Form -->
+        <div class="leave-review-card">
+            <h4>Leave a Review</h4>
+            <form action="/listings/<%= listing._id %>/reviews" method="POST">
+                <div class="rating-select-group">
+                    <label>Rating:</label>
+                    <div class="star-rating-inputs">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                </div>
+                <textarea class="review-textarea" name="review[comment]" placeholder="Share your experience staying here..." required></textarea>
+                <button type="submit" class="review-submit-btn">Submit Review</button>
+            </form>
+        </div>
+
+        <!-- Dummy Review Cards -->
+        <div class="reviews-grid">
+            <div class="review-card">
+                <div class="review-user-row">
+                    <div class="review-user-avatar">AK</div>
+                    <div class="review-user-info">
+                        <h5>Aarav Kumar</h5>
+                        <span>October 2026</span>
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <p class="review-comment">The location was absolutely breathtaking! Spotless clean, fast Wi-Fi, and the host was very responsive throughout our stay.</p>
+            </div>
+
+            <div class="review-card">
+                <div class="review-user-row">
+                    <div class="review-user-avatar">PS</div>
+                    <div class="review-user-info">
+                        <h5>Priya Sharma</h5>
+                        <span>September 2026</span>
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <p class="review-comment">One of the best Airbnb experiences we have had. The photos do not do justice to how cozy and peaceful this place is.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Section -->
+    <div class="location-section">
+        <h3>Where you'll be</h3>
+        <p class="location-detail">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <%= listing.location %>, <%= listing.country %>
+        </p>
+    </div>
+
+    <!-- Delete Confirmation Modal Popup -->
+    <div class="modal-backdrop" id="deleteModalBackdrop">
+        <div class="modal-card">
+            <!-- Close Button -->
+            <button type="button" class="modal-close-btn" id="closeModalBtn" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Warning Icon -->
+            <div class="modal-icon-wrap">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <!-- Modal Content -->
+            <h3 class="modal-title">Delete this listing?</h3>
+            <p class="modal-desc">
+                Are you sure you want to permanently delete <strong>"<%= listing.title %>"</strong>? This action cannot be undone.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" id="cancelDeleteBtn">Cancel</button>
+                <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" style="display:inline;">
+                    <button type="submit" class="btn-modal-confirm">Yes, Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Delete Modal Script -->
+<script>
+    (function() {
+        const modal = document.getElementById('deleteModalBackdrop');
+        const openBtn = document.getElementById('openDeleteModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelDeleteBtn');
+
+        function openModal() {
+            modal.classList.add('show-modal');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('show-modal');
+            document.body.style.overflow = '';
+        }
+
+        if (openBtn) openBtn.addEventListener('click', openModal);
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+        // Click outside to close
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+        }
+
+        // Escape key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('show-modal')) {
+                closeModal();
+            }
+        });
+    })();
+</script>

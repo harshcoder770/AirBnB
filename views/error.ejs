@@ -1,0 +1,257 @@
+<% layout('/layouts/boilerplate') -%>
+
+<style>
+    /* ===== PAGE WRAPPER ===== */
+    .error-page-wrapper {
+        min-height: calc(100vh - 160px);
+        background: linear-gradient(135deg, #fafafa 0%, #f4effa 50%, #fdedf2 100%);
+        padding: 60px 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    /* ===== ERROR CARD ===== */
+    .error-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 48px 40px;
+        max-width: 620px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+        animation: fadeIn 0.4s ease forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ===== ICON WRAPPER ===== */
+    .error-icon-box {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #fee2e2;
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        margin: 0 auto 24px;
+        box-shadow: 0 6px 18px rgba(239, 68, 68, 0.15);
+    }
+
+    /* ===== STATUS BADGE ===== */
+    .status-badge {
+        display: inline-block;
+        background: #fff1f2;
+        color: #e11d48;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 4px 14px;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+        border: 1px solid #ffe4e6;
+    }
+
+    /* ===== HEADINGS & TEXT ===== */
+    .error-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(26px, 4vw, 36px);
+        font-weight: 800;
+        color: #1a1a2e;
+        margin-bottom: 12px;
+        line-height: 1.25;
+    }
+
+    .error-message-box {
+        background: #fafafa;
+        border: 1px solid #eeeeee;
+        border-left: 4px solid #FF385C;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin: 20px 0 28px;
+        text-align: left;
+    }
+
+    .error-message-text {
+        font-family: 'Poppins', sans-serif;
+        font-size: 15px;
+        color: #4b5563;
+        line-height: 1.6;
+        word-break: break-word;
+        margin: 0;
+    }
+
+    /* ===== ACTION BUTTONS ===== */
+    .error-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .btn-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 26px;
+        background: linear-gradient(135deg, #FF385C, #D70466);
+        color: #ffffff;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 18px rgba(255, 56, 92, 0.3);
+        transition: all 0.25s ease;
+    }
+
+    .btn-home:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(255, 56, 92, 0.4);
+        color: #ffffff;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 22px;
+        background: #f1f5f9;
+        color: #475569;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+
+    /* ===== DEVELOPER STACK TRACE (COLLAPSIBLE) ===== */
+    .stack-trace-details {
+        margin-top: 32px;
+        text-align: left;
+        border-top: 1px solid #f0f0f0;
+        padding-top: 20px;
+    }
+
+    .stack-trace-summary {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: #94a3b8;
+        cursor: pointer;
+        user-select: none;
+        outline: none;
+        transition: color 0.2s;
+    }
+
+    .stack-trace-summary:hover {
+        color: #64748b;
+    }
+
+    .stack-trace-pre {
+        background: #1e293b;
+        color: #f1f5f9;
+        padding: 16px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-family: 'Courier New', Courier, monospace;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        margin-top: 10px;
+        line-height: 1.5;
+        max-height: 220px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+        .error-page-wrapper {
+            padding: 32px 16px;
+        }
+
+        .error-card {
+            padding: 32px 20px;
+            border-radius: 18px;
+        }
+
+        .error-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .btn-home, .btn-back {
+            width: 100%;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+    }
+</style>
+
+<div class="error-page-wrapper">
+    <div class="error-card">
+
+        <!-- Error Icon -->
+        <div class="error-icon-box">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+
+        <!-- Status Code Badge (e.g. 404, 500) -->
+        <div class="status-badge">
+            Error <%= (typeof err !== 'undefined' && err.statusCode) ? err.statusCode : (typeof statusCode !== 'undefined' ? statusCode : 500) %>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="error-title">Oops! Something went wrong</h1>
+
+        <!-- Error Message Box -->
+        <div class="error-message-box">
+            <p class="error-message-text">
+                <%= (typeof message !== 'undefined' && message) ? message : (typeof err !== 'undefined' && err.message ? err.message : 'An unexpected error occurred while processing your request.') %>
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="error-actions">
+            <a href="/listings" class="btn-home">
+                <i class="fa-solid fa-house"></i> Explore Listings
+            </a>
+            <button type="button" class="btn-back" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i> Go Back
+            </button>
+        </div>
+
+        <!-- Optional: Developer Stack Trace (Shown only if err.stack is present) -->
+        <% if (typeof err !== 'undefined' && err.stack) { %>
+            <details class="stack-trace-details">
+                <summary class="stack-trace-summary">
+                    <i class="fa-solid fa-terminal" style="margin-right: 6px;"></i> Technical Details (Error Stack)
+                </summary>
+                <pre class="stack-trace-pre"><%= err.stack %></pre>
+            </details>
+        <% } %>
+
+    </div>
+</div>
