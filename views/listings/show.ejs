@@ -1,5 +1,15 @@
 <% layout('/layouts/boilerplate') -%>
 
+<%
+    // Calculate live average rating from actual database reviews
+    const allReviews = (listing.reviews && listing.reviews.length > 0) ? listing.reviews : [];
+    let avgRating = 0;
+    if (allReviews.length > 0) {
+        let total = allReviews.reduce((acc, curr) => acc + (Number(curr.rating) || 0), 0);
+        avgRating = (total / allReviews.length).toFixed(1);
+    }
+%>
+
 <style>
     /* ===== PAGE WRAPPER ===== */
     .show-wrapper {
@@ -156,6 +166,7 @@
     .btn-action-edit:hover {
         background: #333333;
         transform: translateY(-1px);
+        color: #ffffff;
     }
 
     .btn-action-delete {
@@ -188,12 +199,11 @@
         margin-bottom: 48px;
     }
 
-    /* Left Details Column */
     .details-left {
         display: flex;
         flex-direction: column;
         gap: 28px;
-        min-width: 0; /* Prevents flex child overflow */
+        min-width: 0;
     }
 
     .host-card {
@@ -222,11 +232,13 @@
         font-size: 18px;
         font-weight: 700;
         color: #1a1a2e;
+        margin-bottom: 2px;
     }
 
     .host-card-info p {
         font-size: 13px;
         color: #717171;
+        margin-bottom: 0;
     }
 
     .highlights {
@@ -257,12 +269,13 @@
         font-size: 15px;
         font-weight: 700;
         color: #1a1a2e;
+        margin-bottom: 2px;
     }
 
     .highlight-text p {
         font-size: 13px;
         color: #717171;
-        margin-top: 2px;
+        margin: 0;
     }
 
     .about-place h3 {
@@ -278,9 +291,10 @@
         line-height: 1.7;
         color: #484848;
         word-break: break-word;
+        margin: 0;
     }
 
-    /* Right Sticky Booking Card */
+    /* ===== RIGHT STICKY PRICE CARD ===== */
     .price-card {
         position: sticky;
         top: 100px;
@@ -341,6 +355,7 @@
         text-transform: uppercase;
         color: #222222;
         letter-spacing: 0.5px;
+        margin-bottom: 2px;
     }
 
     .booking-cell span {
@@ -373,9 +388,10 @@
         font-size: 12px;
         color: #717171;
         margin-top: 12px;
+        margin-bottom: 0;
     }
 
-    /* ===== REVIEWS / COMMENTS SECTION ===== */
+    /* ===== REVIEWS SECTION ===== */
     .reviews-section {
         padding-top: 40px;
         border-top: 1px solid #ebebeb;
@@ -398,137 +414,125 @@
         font-size: 20px;
     }
 
-    .leave-review-card {
+    /* ===== REVIEW FORM CARD ===== */
+    .review-form-card {
+        background: #ffffff;
+        border: 1px solid #ebebeb;
+        border-radius: 18px;
+        padding: 28px;
+        margin-bottom: 36px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+
+    .review-form-title {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 16px;
+    }
+
+    .star-rating-box {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 26px;
+        color: #FFB400;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .star-rating-box i {
+        transition: transform 0.15s ease;
+    }
+
+    .star-rating-box i:hover {
+        transform: scale(1.15);
+    }
+
+    .rating-live-badge {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 20px;
+        background: #fff8eb;
+        color: #b45309;
+        border: 1px solid #fef3c7;
+    }
+
+    /* ===== REVIEW DISPLAY CARDS ===== */
+    .review-item-card {
         background: #ffffff;
         border: 1px solid #ebebeb;
         border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 32px;
+        padding: 22px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-    }
-
-    .leave-review-card h4 {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 16px;
-        font-weight: 700;
-        color: #1a1a2e;
-        margin-bottom: 14px;
-    }
-
-    .rating-select-group {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
         display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 14px;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
-    .rating-select-group label {
-        font-size: 14px;
-        font-weight: 600;
-        color: #555555;
+    .review-item-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
     }
 
-    .star-rating-inputs {
-        display: flex;
-        gap: 4px;
+    .review-stars-row {
         color: #FFB400;
-        font-size: 18px;
-        cursor: pointer;
-    }
-
-    .review-textarea {
-        width: 100%;
-        min-height: 95px;
-        padding: 12px 14px;
-        border: 1px solid #dddddd;
-        border-radius: 10px;
-        font-family: 'Poppins', sans-serif;
         font-size: 14px;
-        outline: none;
-        resize: vertical;
-        box-sizing: border-box;
-        transition: border-color 0.2s;
-    }
-
-    .review-textarea:focus {
-        border-color: #FF385C;
-    }
-
-    .review-submit-btn {
-        margin-top: 12px;
-        padding: 10px 22px;
-        background: #1a1a2e;
-        color: #ffffff;
-        font-family: 'DM Sans', sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .review-submit-btn:hover {
-        background: #333333;
-    }
-
-    .reviews-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-    }
-
-    .review-card {
-        background: #ffffff;
-        border: 1px solid #ebebeb;
-        border-radius: 14px;
-        padding: 20px;
-    }
-
-    .review-user-row {
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 10px;
+        gap: 3px;
+        margin-bottom: 12px;
+    }
+
+    .review-stars-score {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        color: #1a1a2e;
+        margin-left: 6px;
     }
 
     .review-user-avatar {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         border-radius: 50%;
-        background: #e2e8f0;
+        background: linear-gradient(135deg, #1a1a2e, #475569);
+        color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 700;
-        color: #475569;
-        font-size: 14px;
+        font-size: 15px;
         flex-shrink: 0;
     }
 
-    .review-user-info h5 {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 15px;
-        font-weight: 700;
-        color: #1a1a2e;
-    }
-
-    .review-user-info span {
-        font-size: 12px;
-        color: #888888;
-    }
-
-    .review-stars {
-        color: #FFB400;
-        font-size: 12px;
-        margin-bottom: 8px;
-    }
-
-    .review-comment {
+    .review-text-content {
+        font-family: 'Poppins', sans-serif;
         font-size: 14px;
-        color: #444444;
+        color: #4b5563;
         line-height: 1.6;
         word-break: break-word;
+        margin: 0;
+    }
+
+    .btn-review-delete {
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 6px 9px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-review-delete:hover {
+        color: #dc2626;
+        background: #fef2f2;
     }
 
     /* ===== WHERE YOU'LL BE ===== */
@@ -552,6 +556,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        margin: 0;
     }
 
     .location-detail i {
@@ -559,7 +564,7 @@
         font-size: 16px;
     }
 
-    /* ===== DELETE POP-UP MODAL ===== */
+    /* ===== REUSABLE POP-UP MODAL (LISTING & REVIEWS) ===== */
     .modal-backdrop {
         position: fixed;
         inset: 0;
@@ -592,19 +597,13 @@
     }
 
     @keyframes modalPopUp {
-        from {
-            opacity: 0;
-            transform: scale(0.92) translateY(12px);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
+        from { opacity: 0; transform: scale(0.92) translateY(12px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
     }
 
     @keyframes modalFadeIn {
         from { opacity: 0; }
-        to { opacity: 1; }
+        to   { opacity: 1; }
     }
 
     .modal-close-btn {
@@ -702,7 +701,7 @@
         transform: translateY(-1px);
     }
 
-    /* ===== RESPONSIVE MEDIA QUERIES ===== */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 1024px) {
         .show-wrapper {
             padding: 24px 32px 60px;
@@ -726,10 +725,6 @@
 
         .price-card {
             position: static;
-        }
-
-        .reviews-grid {
-            grid-template-columns: 1fr;
         }
     }
 
@@ -760,31 +755,29 @@
             justify-content: center;
         }
 
-        .leave-review-card {
-            padding: 18px 16px;
-        }
-    }
-
-    @media (max-width: 380px) {
-        .modal-actions {
-            grid-template-columns: 1fr;
+        .review-form-card {
+            padding: 20px 16px;
         }
     }
 </style>
 
 <div class="show-wrapper">
 
-    <!-- Back Button to All Listings -->
+    <!-- Back Button -->
     <a href="/listings" class="back-btn">
         <i class="fa-solid fa-arrow-left"></i> All Listings
     </a>
 
-    <!-- Title and Subtitle -->
+    <!-- Title and Subtitle with Dynamic Rating -->
     <div class="show-header">
         <h1 class="listing-title"><%= listing.title %></h1>
         <div class="listing-subtitle">
             <span class="rating-badge">
-                <i class="fa-solid fa-star"></i> 4.9 · 14 reviews
+                <% if (allReviews.length > 0) { %>
+                    <i class="fa-solid fa-star"></i> <%= avgRating %> · <%= allReviews.length %> review<%= allReviews.length > 1 ? 's' : '' %>
+                <% } else { %>
+                    <i class="fa-regular fa-star" style="color: #FFB400;"></i> New (No reviews yet)
+                <% } %>
             </span>
             <span>·</span>
             <span class="location-link">
@@ -799,7 +792,7 @@
         <img src="<%= listing.image %>" alt="<%= listing.title %>" loading="lazy">
     </div>
 
-    <!-- Host Control Bar: Edit & Custom Delete Trigger -->
+    <!-- Host Actions Bar -->
     <div class="host-actions-bar">
         <span class="host-actions-title">
             <i class="fa-solid fa-sliders"></i> Listing Controls
@@ -814,12 +807,11 @@
         </div>
     </div>
 
-    <!-- Two-Column Main Content -->
+    <!-- Content Grid: Left details + Right price card -->
     <div class="content-grid">
 
-        <!-- Left Column: Details -->
+        <!-- Left Column -->
         <div class="details-left">
-            <!-- Host Info -->
             <div class="host-card">
                 <div class="host-avatar">
                     <i class="fa-solid fa-user"></i>
@@ -830,7 +822,6 @@
                 </div>
             </div>
 
-            <!-- Highlights -->
             <div class="highlights">
                 <div class="highlight-item">
                     <i class="fa-solid fa-door-open"></i>
@@ -855,14 +846,13 @@
                 </div>
             </div>
 
-            <!-- About Place / Description -->
             <div class="about-place">
                 <h3>About this place</h3>
                 <p><%= listing.description %></p>
             </div>
         </div>
 
-        <!-- Right Column: Booking Card -->
+        <!-- Right Column: Sticky Booking Card -->
         <div>
             <div class="price-card">
                 <div class="price-card-header">
@@ -871,7 +861,7 @@
                         <span class="price-night"> / night</span>
                     </div>
                     <span class="rating-badge">
-                        <i class="fa-solid fa-star"></i> 4.9
+                        <i class="fa-solid fa-star"></i> <%= allReviews.length > 0 ? avgRating : 'New' %>
                     </span>
                 </div>
 
@@ -899,70 +889,126 @@
 
     </div>
 
-    <!-- Reviews Section -->
+    <!-- ===== REVIEWS SECTION ===== -->
     <div class="reviews-section">
         <div class="reviews-header">
             <i class="fa-solid fa-star"></i>
-            <span>4.9 · 14 Reviews</span>
+            <span>
+                <% if (allReviews.length > 0) { %>
+                    <%= avgRating %> · <%= allReviews.length %> Review<%= allReviews.length > 1 ? 's' : '' %>
+                <% } else { %>
+                    Guest Reviews
+                <% } %>
+            </span>
         </div>
 
-        <!-- Leave a Review Form -->
-        <div class="leave-review-card">
-            <h4>Leave a Review</h4>
-            <form action="/listings/<%= listing._id %>/reviews" method="POST">
-                <div class="rating-select-group">
-                    <label>Rating:</label>
-                    <div class="star-rating-inputs">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
+        <!-- Leave a Review Form Card -->
+        <div class="review-form-card" id="reviewFormSection">
+            <h4 class="review-form-title">Leave a Review</h4>
+            
+            <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
+                
+                <!-- Hidden input storing review[rating] for backend -->
+                <input type="hidden" name="review[rating]" id="ratingInput" value="5">
+
+                <!-- Interactive Star Rating Picker -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-dark small mb-2">Your Rating</label>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="star-rating-box" id="starContainer">
+                            <i class="fa-solid fa-star star-icon" data-value="1"></i>
+                            <i class="fa-solid fa-star star-icon" data-value="2"></i>
+                            <i class="fa-solid fa-star star-icon" data-value="3"></i>
+                            <i class="fa-solid fa-star star-icon" data-value="4"></i>
+                            <i class="fa-solid fa-star star-icon" data-value="5"></i>
+                        </div>
+                        <span class="rating-live-badge" id="ratingBadge">5.0 · Excellent</span>
                     </div>
                 </div>
-                <textarea class="review-textarea" name="review[comment]" placeholder="Share your experience staying here..." required></textarea>
-                <button type="submit" class="review-submit-btn">Submit Review</button>
+
+                <!-- Comment Input -->
+                <div class="mb-3">
+                    <label for="comment" class="form-label fw-bold text-dark small mb-2">Comment</label>
+                    <textarea class="form-control rounded-3 p-3" name="review[comment]" id="comment" rows="3" placeholder="Share your experience staying here (amenities, cleanliness, location)..." required></textarea>
+                    <div class="invalid-feedback">
+                        Please write a short comment for your review.
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-dark rounded-3 px-4 py-2 fw-semibold">
+                    Submit Review
+                </button>
             </form>
         </div>
 
-        <!-- Dummy Review Cards -->
-        <div class="reviews-grid">
-            <div class="review-card">
-                <div class="review-user-row">
-                    <div class="review-user-avatar">AK</div>
-                    <div class="review-user-info">
-                        <h5>Aarav Kumar</h5>
-                        <span>October 2026</span>
-                    </div>
-                </div>
-                <div class="review-stars">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <p class="review-comment">The location was absolutely breathtaking! Spotless clean, fast Wi-Fi, and the host was very responsive throughout our stay.</p>
-            </div>
+        <!-- Reviews Grid -->
+        <% if (allReviews.length > 0) { %>
+            <div class="row g-4 mb-4">
+                <% allReviews.forEach(function(review) { %>
+                    <div class="col-md-6">
+                        <div class="review-item-card">
+                            <div>
+                                <!-- Top Row: Avatar, Date, Pop-up Delete button -->
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="review-user-avatar">
+                                            <i class="fa-solid fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0 text-dark">Verified Guest</h6>
+                                            <small class="text-secondary" style="font-size: 12px;">
+                                                <%= review.createdAt ? new Date(review.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Recent stay' %>
+                                            </small>
+                                        </div>
+                                    </div>
 
-            <div class="review-card">
-                <div class="review-user-row">
-                    <div class="review-user-avatar">PS</div>
-                    <div class="review-user-info">
-                        <h5>Priya Sharma</h5>
-                        <span>September 2026</span>
+                                    <!-- Pop-up Modal Trigger for Review Delete -->
+                                    <button type="button" class="btn-review-delete open-review-delete-btn" data-review-id="<%= review._id %>" title="Delete Review">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Star Rating Display (Safe from NaN) -->
+                                <% const rScore = Math.round(Number(review.rating) || 5); %>
+                                <div class="review-stars-row">
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <% if (i <= rScore) { %>
+                                            <i class="fa-solid fa-star"></i>
+                                        <% } else { %>
+                                            <i class="fa-regular fa-star" style="color: #d1d5db;"></i>
+                                        <% } %>
+                                    <% } %>
+                                    <span class="review-stars-score">
+                                        <%= (review.rating && !isNaN(review.rating)) ? Number(review.rating).toFixed(1) : '5.0' %>
+                                    </span>
+                                </div>
+
+                                <!-- Review Comment Text -->
+                                <p class="review-text-content"><%= review.comment || 'No comment provided.' %></p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="review-stars">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <p class="review-comment">One of the best Airbnb experiences we have had. The photos do not do justice to how cozy and peaceful this place is.</p>
+                <% }); %>
             </div>
-        </div>
+        <% } else { %>
+            <!-- Empty State -->
+            <div class="card border border-light-subtle rounded-4 p-4 text-center my-4 bg-light">
+                <div class="card-body py-4">
+                    <div class="mb-3" style="font-size: 2.5rem; color: #94a3b8;">
+                        <i class="fa-regular fa-comment-dots"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">No reviews yet</h5>
+                    <p class="text-secondary mb-3" style="max-width: 420px; margin: 0 auto; font-size: 14px;">
+                        Be the first to share your thoughts and help future guests know what to expect!
+                    </p>
+                    <a href="#reviewFormSection" class="btn btn-outline-dark rounded-pill px-4 py-2 fw-semibold">
+                        <i class="fa-regular fa-pen-to-square me-1"></i> Add a Review
+                    </a>
+                </div>
+            </div>
+        <% } %>
+
     </div>
 
     <!-- Location Section -->
@@ -974,26 +1020,19 @@
         </p>
     </div>
 
-    <!-- Delete Confirmation Modal Popup -->
+    <!-- 1. DELETE LISTING POP-UP MODAL -->
     <div class="modal-backdrop" id="deleteModalBackdrop">
         <div class="modal-card">
-            <!-- Close Button -->
             <button type="button" class="modal-close-btn" id="closeModalBtn" aria-label="Close modal">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-
-            <!-- Warning Icon -->
             <div class="modal-icon-wrap">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-
-            <!-- Modal Content -->
             <h3 class="modal-title">Delete this listing?</h3>
             <p class="modal-desc">
                 Are you sure you want to permanently delete <strong>"<%= listing.title %>"</strong>? This action cannot be undone.
             </p>
-
-            <!-- Action Buttons -->
             <div class="modal-actions">
                 <button type="button" class="btn-modal-cancel" id="cancelDeleteBtn">Cancel</button>
                 <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" style="display:inline;">
@@ -1003,10 +1042,33 @@
         </div>
     </div>
 
+    <!-- 2. DELETE REVIEW POP-UP MODAL -->
+    <div class="modal-backdrop" id="deleteReviewModalBackdrop">
+        <div class="modal-card">
+            <button type="button" class="modal-close-btn" id="closeReviewModalBtn" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-icon-wrap">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <h3 class="modal-title">Delete this review?</h3>
+            <p class="modal-desc">
+                Are you sure you want to remove your review? This action cannot be undone.
+            </p>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" id="cancelReviewDeleteBtn">Cancel</button>
+                <form id="deleteReviewForm" method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" style="display:inline;">
+                    <button type="submit" class="btn-modal-confirm">Yes, Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<!-- Delete Modal Script -->
+<!-- Scripts -->
 <script>
+    // 1. Listing Delete Modal
     (function() {
         const modal = document.getElementById('deleteModalBackdrop');
         const openBtn = document.getElementById('openDeleteModalBtn');
@@ -1027,18 +1089,129 @@
         if (closeBtn) closeBtn.addEventListener('click', closeModal);
         if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
 
-        // Click outside to close
         if (modal) {
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) closeModal();
             });
         }
 
-        // Escape key to close
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && modal.classList.contains('show-modal')) {
                 closeModal();
             }
+        });
+    })();
+
+    // 2. Review Delete Pop-up Modal (Replaces browser alert)
+    (function() {
+        const reviewModal = document.getElementById('deleteReviewModalBackdrop');
+        const closeReviewBtn = document.getElementById('closeReviewModalBtn');
+        const cancelReviewBtn = document.getElementById('cancelReviewDeleteBtn');
+        const deleteReviewForm = document.getElementById('deleteReviewForm');
+        const deleteReviewBtns = document.querySelectorAll('.open-review-delete-btn');
+
+        function openReviewModal() {
+            reviewModal.classList.add('show-modal');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReviewModal() {
+            reviewModal.classList.remove('show-modal');
+            document.body.style.overflow = '';
+        }
+
+        deleteReviewBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const reviewId = this.getAttribute('data-review-id');
+                // Dynamically sets action route for this exact review
+                deleteReviewForm.action = `/listings/<%= listing._id %>/reviews/${reviewId}?_method=DELETE`;
+                openReviewModal();
+            });
+        });
+
+        if (closeReviewBtn) closeReviewBtn.addEventListener('click', closeReviewModal);
+        if (cancelReviewBtn) cancelReviewBtn.addEventListener('click', closeReviewModal);
+
+        if (reviewModal) {
+            reviewModal.addEventListener('click', function(e) {
+                if (e.target === reviewModal) closeReviewModal();
+            });
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && reviewModal.classList.contains('show-modal')) {
+                closeReviewModal();
+            }
+        });
+    })();
+
+    // 3. Interactive Star Rating Selector
+    (function() {
+        const starContainer = document.getElementById('starContainer');
+        const ratingInput = document.getElementById('ratingInput');
+        const ratingBadge = document.getElementById('ratingBadge');
+
+        if (!starContainer || !ratingInput) return;
+
+        const stars = starContainer.querySelectorAll('.star-icon');
+        const descriptions = {
+            1: "1.0 · Poor",
+            2: "2.0 · Fair",
+            3: "3.0 · Average",
+            4: "4.0 · Very Good",
+            5: "5.0 · Excellent"
+        };
+
+        let currentRating = parseInt(ratingInput.value) || 5;
+
+        function renderStars(rating) {
+            stars.forEach(star => {
+                const val = parseInt(star.getAttribute('data-value'));
+                if (val <= rating) {
+                    star.className = 'fa-solid fa-star star-icon';
+                    star.style.color = '#FFB400';
+                } else {
+                    star.className = 'fa-regular fa-star star-icon';
+                    star.style.color = '#d1d5db';
+                }
+            });
+            if (ratingBadge && descriptions[rating]) {
+                ratingBadge.textContent = descriptions[rating];
+            }
+        }
+
+        stars.forEach(star => {
+            star.addEventListener('mouseenter', () => {
+                const hoverVal = parseInt(star.getAttribute('data-value'));
+                renderStars(hoverVal);
+            });
+
+            star.addEventListener('click', () => {
+                currentRating = parseInt(star.getAttribute('data-value'));
+                ratingInput.value = currentRating;
+                renderStars(currentRating);
+            });
+        });
+
+        starContainer.addEventListener('mouseleave', () => {
+            renderStars(currentRating);
+        });
+
+        renderStars(currentRating);
+    })();
+
+    // 4. Form Validation Script
+    (() => {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
         });
     })();
 </script>

@@ -7,8 +7,8 @@ const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const wrapAsync = require('./utils/wrapAsync');
 const ExpressError = require('./utils/ExpressError');
-
-
+const { listingSchema, reviewSchema } = require('./schema.js');
+const Review = require('./models/reviews');
 
 
 
@@ -43,7 +43,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
+const validateListing = (req, res, next) => {
+    const { error } = listingSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg, 400);
+    }
+    else {
+        next();
+    }
+}
 
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg, 400);
+    }else{
+        next();
+    }
+}
 
 
 
@@ -64,8 +83,8 @@ app.get('/listings/new', (req, res) => {
 
 app.get("/listings/:id" , wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id); 
-    res.render('listings/show', { listing });
+    const listing = await Listing.findById(id).populate('reviews'); 
+    res.render('listings/show', { listing, review: listing.reviews });
 }))
 
 
@@ -75,8 +94,7 @@ app.get('/listings/:id/edit', wrapAsync(async (req, res) => {
     res.render('listings/edit', { listing });
 }));
 
-app.put('/listings/:id', wrapAsync(async (req, res) => {
-    if(!req.body.listing) throw new ExpressError('Invalid Listing Data', 400);
+app.put('/listings/:id',validateListing, wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     res.redirect(`/listings/${id}`);
@@ -88,14 +106,59 @@ app.delete('/listings/:id', wrapAsync(async (req, res) => {
     res.redirect('/listings');
 }));
 
-app.post('/listings',  wrapAsync(async (req, res, next) => {
-    if(!req.body.listing) throw new ExpressError('Invalid Listing Data', 400);
+app.post('/listings', validateListing, wrapAsync(async (req, res) => {
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect('/listings');
   
    
 }))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post('/listings/:id/reviews',validateReview,  wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    const listing = await Listing.findById(id);
+    const review = new Review(req.body.review);
+    listing.reviews.push(review);
+    await review.save();
+    await listing.save();
+    res.redirect(`/listings/${id}`);
+
+}))
+
+app.delete('/listings/:id/reviews/:reviewId', wrapAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`);
+}))
+
+
+
+
+
+
+
+
+
 
 
 
