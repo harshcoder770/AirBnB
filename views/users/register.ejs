@@ -1,0 +1,345 @@
+<% layout('/layouts/boilerplate') -%>
+
+<style>
+    /* ===== AUTH PAGE WRAPPER ===== */
+    .auth-wrapper {
+        min-height: calc(100vh - 160px);
+        background: linear-gradient(135deg, #fafafa 0%, #f4effa 50%, #fdedf2 100%);
+        padding: 48px 20px 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    .auth-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 42px 36px;
+        max-width: 460px;
+        width: 100%;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+        animation: authFadeIn 0.35s ease-out;
+    }
+
+    @keyframes authFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ===== HEADER ===== */
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .auth-icon-badge {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #fff1f2;
+        color: #FF385C;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin: 0 auto 16px;
+        box-shadow: 0 4px 14px rgba(255, 56, 92, 0.18);
+    }
+
+    .auth-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 28px;
+        font-weight: 800;
+        color: #1a1a2e;
+        margin-bottom: 6px;
+    }
+
+    .auth-subtitle {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        color: #717171;
+        margin: 0;
+    }
+
+    /* ===== FORM FIELDS ===== */
+    .auth-group {
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .auth-group label {
+        display: block;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13.5px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 7px;
+    }
+
+    .auth-input-box {
+        position: relative;
+    }
+
+    .auth-input-box input {
+        width: 100%;
+        padding: 13px 16px;
+        font-size: 14px;
+        font-family: 'Poppins', sans-serif;
+        border: 2px solid #eeeeee;
+        border-radius: 12px;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        color: #1a1a2e;
+        background: #fafafa;
+        box-sizing: border-box;
+    }
+
+    .auth-input-box input:focus {
+        border-color: #FF385C;
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(255, 56, 92, 0.08);
+    }
+
+    /* Password toggle button */
+    .password-toggle-btn {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 0;
+        font-size: 15px;
+        transition: color 0.2s;
+    }
+
+    .password-toggle-btn:hover {
+        color: #1a1a2e;
+    }
+
+    /* ===== BOOTSTRAP VALIDATION STYLES ===== */
+    .was-validated .auth-group input:invalid {
+        border-color: #dc3545 !important;
+        background-color: #fff9f9 !important;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.12) !important;
+    }
+
+    .was-validated .auth-group input:valid {
+        border-color: #198754 !important;
+        background-color: #f9fffb !important;
+        box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.12) !important;
+    }
+
+    .was-validated input:invalid ~ .invalid-feedback {
+        display: block !important;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: #dc3545;
+        margin-top: 5px;
+    }
+
+    .was-validated input:valid ~ .valid-feedback {
+        display: block !important;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: #198754;
+        margin-top: 5px;
+    }
+
+    /* ===== TERMS NOTICE ===== */
+    .terms-text {
+        font-size: 12px;
+        color: #888888;
+        line-height: 1.5;
+        margin: 18px 0 24px;
+        text-align: center;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .terms-text a {
+        color: #1a1a2e;
+        text-decoration: underline;
+    }
+
+    /* ===== SUBMIT BUTTON ===== */
+    .btn-auth-submit {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #FF385C, #D70466);
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 16px rgba(255, 56, 92, 0.3);
+    }
+
+    .btn-auth-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(255, 56, 92, 0.4);
+    }
+
+    .btn-auth-submit:active {
+        transform: translateY(0);
+    }
+
+    /* ===== FOOTER SWITCHER ===== */
+    .auth-footer {
+        text-align: center;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #eeeeee;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        color: #666666;
+    }
+
+    .auth-footer a {
+        color: #FF385C;
+        font-weight: 700;
+        text-decoration: none;
+        margin-left: 4px;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 500px) {
+        .auth-card {
+            padding: 32px 22px;
+            border-radius: 20px;
+        }
+
+        .auth-title {
+            font-size: 24px;
+        }
+    }
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        
+        <!-- Header -->
+        <div class="auth-header">
+            <div class="auth-icon-badge">
+                <i class="fa-brands fa-airbnb"></i>
+            </div>
+            <h1 class="auth-title">Welcome to Airbnb</h1>
+            <p class="auth-subtitle">Create an account to start exploring or hosting</p>
+        </div>
+
+        <!-- Form submitting to router.post('/signup') -->
+        <form action="/signup" method="POST" novalidate class="needs-validation">
+
+            <!-- Username -->
+            <div class="auth-group">
+                <label for="username">Username</label>
+                <div class="auth-input-box">
+                    <input type="text" id="username" name="username" placeholder="Choose a username" required>
+                    <div class="invalid-feedback">
+                        Please choose a username.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="auth-group">
+                <label for="email">Email</label>
+                <div class="auth-input-box">
+                    <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                    <div class="invalid-feedback">
+                        Please provide a valid email address.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="auth-group">
+                <label for="password">Password</label>
+                <div class="auth-input-box">
+                    <input type="password" id="password" name="password" placeholder="Create a password" required minlength="6">
+                    <button type="button" class="password-toggle-btn" id="togglePasswordBtn" aria-label="Toggle password visibility">
+                        <i class="fa-regular fa-eye" id="passwordEyeIcon"></i>
+                    </button>
+                    <div class="invalid-feedback">
+                        Password must be at least 6 characters long.
+                    </div>
+                </div>
+            </div>
+
+            <p class="terms-text">
+                By creating an account, you agree to Airbnb's 
+                <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a>.
+            </p>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-auth-submit">
+                Sign Up
+            </button>
+
+            <!-- Switch to Login -->
+            <div class="auth-footer">
+                Already have an account? 
+                <a href="/login">Log in</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script>
+    // 1. Password Visibility Toggle
+    (function() {
+        const toggleBtn = document.getElementById('togglePasswordBtn');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('passwordEyeIcon');
+
+        if (toggleBtn && passwordInput && eyeIcon) {
+            toggleBtn.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        }
+    })();
+
+    // 2. Bootstrap Client-Side Validation
+    (() => {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>

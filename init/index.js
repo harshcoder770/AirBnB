@@ -24,6 +24,7 @@ const initListings = async () => {
         console.error('Error deleting existing listings:', err);
     }
     try {
+        data.data = data.data.map((listing) => ({...listing, owner: '6af17d9d287fbe7889e35ae0' }));
         await Listing.insertMany(data.data);
         console.log('Listings inserted successfully');
     } catch (err) {

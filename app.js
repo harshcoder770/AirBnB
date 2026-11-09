@@ -6,6 +6,29 @@ const methodOverride = require('method-override');
 const ExpressError = require('./utils/ExpressError');
 const listingsRouter = require('./routes/listings');
 const reviewsRouter = require('./routes/reviews');
+const userRouter = require('./routes/user');
+const session = require('express-session');
+const connectFlash = require('connect-flash');
+const passport = require('passport');
+const localStarategy = require('passport-local');
+const User = require('./models/user');
+
+
+
+
+
+// Session Configuration
+const sessionOptions = {
+    secret: 'thisshouldbeabettersecret!',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    }
+}
+
 
 
 
@@ -39,15 +62,31 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session(sessionOptions));
+app.use(connectFlash());
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStarategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 
 
+
+// Flash Messages Middleware
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+     res.locals.currUser = req.user;
+    next();
+});
 
 // all Paths
 
 app.get('/', (req, res) => {
     res.send('Hello World');
 })
+app.use('/', userRouter);
 app.use('/listings', listingsRouter);
 app.use('/listings/:id/reviews', reviewsRouter);
 

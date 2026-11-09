@@ -309,14 +309,26 @@
                 </div>
             </div>
 
-            <!-- Floating Side Dropdown Panel -->
+                       <!-- Floating Side Dropdown Panel -->
             <div class="user-dropdown-menu" id="userDropdown">
-                <a href="/signup" class="dropdown-item bold-text">
-                    <i class="fa-regular fa-user" style="width: 16px;"></i> Sign up
-                </a>
-                <a href="/login" class="dropdown-item">
-                    <i class="fa-solid fa-arrow-right-to-bracket" style="width: 16px;"></i> Log in
-                </a>
+                <% if (!currUser) { %>
+                    <!-- Logged Out State -->
+                    <a href="/signup" class="dropdown-item bold-text">
+                        <i class="fa-regular fa-user" style="width: 16px;"></i> Sign up
+                    </a>
+                    <a href="/login" class="dropdown-item">
+                        <i class="fa-solid fa-arrow-right-to-bracket" style="width: 16px;"></i> Log in
+                    </a>
+                <% } else { %>
+                    <!-- Logged In State -->
+                    <a href="/profile" class="dropdown-item bold-text">
+                        <i class="fa-regular fa-user" style="width: 16px;"></i> Profile (<%= currUser.username %>)
+                    </a>
+                    <a href="/logout" class="dropdown-item">
+                        <i class="fa-solid fa-arrow-right-from-bracket" style="width: 16px;"></i> Log out
+                    </a>
+                <% } %>
+
                 <div class="dropdown-divider"></div>
                 <a href="/listings/new" class="dropdown-item">
                     <i class="fa-solid fa-house-chimney" style="width: 16px;"></i> Airbnb your home
@@ -331,6 +343,7 @@
             </div>
         </div>
 
+  
     </div>
 </nav>
 
