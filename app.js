@@ -12,7 +12,8 @@ const connectFlash = require('connect-flash');
 const passport = require('passport');
 const localStarategy = require('passport-local');
 const User = require('./models/user');
-
+const wrapAsync = require('./utils/wrapAsync');
+const Listing = require('./models/Listing')
 
 
 
@@ -83,9 +84,11 @@ app.use((req, res, next) => {
 
 // all Paths
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-})
+app.get('/', wrapAsync(async(req, res) => {
+        const allListings = await Listing.find({});
+    
+    res.render('root', {'listings' : allListings })
+}))
 app.use('/', userRouter);
 app.use('/listings', listingsRouter);
 app.use('/listings/:id/reviews', reviewsRouter);

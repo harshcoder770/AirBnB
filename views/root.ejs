@@ -1,0 +1,491 @@
+<% layout('/layouts/boilerplate') -%>
+
+<style>
+    /* ===== AIRBNB BRAND STYLES ===== */
+    .brand-coral {
+        color: #FF385C !important;
+    }
+    .btn-airbnb {
+        background: linear-gradient(135deg, #FF385C, #D70466);
+        color: #ffffff !important;
+        border: none;
+        transition: all 0.25s ease;
+    }
+    .btn-airbnb:hover {
+        opacity: 0.94;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(255, 56, 92, 0.35);
+    }
+
+    /* ===== CATEGORY FILTER BAR ===== */
+    .filters-wrapper {
+        position: sticky;
+        top: 80px;
+        z-index: 99;
+        background: #ffffff;
+        border-bottom: 1px solid #ebebeb;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+    .category-scroll-container {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        overflow-x: auto;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE 10+ */
+        scroll-behavior: smooth;
+        padding: 14px 4px;
+    }
+    .category-scroll-container::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+    .category-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        color: #717171;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+        padding-bottom: 6px;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+        user-select: none;
+    }
+    .category-item i {
+        font-size: 20px;
+        transition: transform 0.2s ease;
+    }
+    .category-item span {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .category-item:hover,
+    .category-item.active {
+        color: #1a1a2e;
+        border-bottom-color: #1a1a2e;
+    }
+    .category-item:hover i {
+        transform: translateY(-2px);
+    }
+
+    /* Tax Toggle Pill Box */
+    .tax-toggle-box {
+        border: 1px solid #dddddd;
+        border-radius: 14px;
+        padding: 10px 16px;
+        background: #ffffff;
+        white-space: nowrap;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: border-color 0.2s ease;
+    }
+    .tax-toggle-box:hover {
+        border-color: #b0b0b0;
+    }
+
+    /* ===== LISTING CARDS ===== */
+    .listing-card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        transition: transform 0.25s ease;
+    }
+    .listing-card-link:hover {
+        transform: translateY(-4px);
+    }
+    .card-img-wrapper {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 20 / 19;
+        overflow: hidden;
+        border-radius: 16px;
+        background: #f0f0f0;
+    }
+    .card-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .listing-card-link:hover .card-img-wrapper img {
+        transform: scale(1.05);
+    }
+    .wishlist-heart-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(4px);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #222222;
+        font-size: 15px;
+        cursor: pointer;
+        z-index: 3;
+        transition: all 0.2s ease;
+    }
+    .wishlist-heart-btn:hover {
+        transform: scale(1.15);
+        color: #FF385C;
+        background: #ffffff;
+    }
+    .wishlist-heart-btn.liked {
+        color: #FF385C;
+    }
+    .badge-guest-fav {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(4px);
+        color: #1a1a2e;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 20px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        z-index: 2;
+    }
+    .card-title-clamp {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: #1a1a2e;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* ===== HERO BANNER ===== */
+    .hero-cta-banner {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+        color: #ffffff;
+    }
+    .hero-cta-banner::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(circle, rgba(255, 56, 92, 0.35) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+</style>
+
+<!-- 1. CATEGORY FILTER & TAX TOGGLE BAR -->
+<div class="filters-wrapper mb-4">
+    <div class="container-fluid px-lg-5 px-3">
+        <div class="d-flex align-items-center justify-content-between gap-4">
+            
+            <!-- Category Scroller -->
+            <div class="category-scroll-container" id="categoryContainer">
+                <div class="category-item active" data-category="all">
+                    <i class="fa-solid fa-fire"></i>
+                    <span>Trending</span>
+                </div>
+                <div class="category-item" data-category="beach">
+                    <i class="fa-solid fa-umbrella-beach"></i>
+                    <span>Beachfront</span>
+                </div>
+                <div class="category-item" data-category="cabin">
+                    <i class="fa-solid fa-house-chimney-window"></i>
+                    <span>Cabins</span>
+                </div>
+                <div class="category-item" data-category="pool">
+                    <i class="fa-solid fa-person-swimming"></i>
+                    <span>Amazing pools</span>
+                </div>
+                <div class="category-item" data-category="city">
+                    <i class="fa-solid fa-city"></i>
+                    <span>Iconic cities</span>
+                </div>
+                <div class="category-item" data-category="lake">
+                    <i class="fa-solid fa-sailboat"></i>
+                    <span>Lakefront</span>
+                </div>
+                <div class="category-item" data-category="mansion">
+                    <i class="fa-solid fa-landmark"></i>
+                    <span>Mansions</span>
+                </div>
+                <div class="category-item" data-category="countryside">
+                    <i class="fa-solid fa-tree"></i>
+                    <span>Countryside</span>
+                </div>
+                <div class="category-item" data-category="camping">
+                    <i class="fa-solid fa-campground"></i>
+                    <span>Camping</span>
+                </div>
+                <div class="category-item" data-category="arctic">
+                    <i class="fa-solid fa-snowflake"></i>
+                    <span>Arctic</span>
+                </div>
+                <div class="category-item" data-category="islands">
+                    <i class="fa-solid fa-water"></i>
+                    <span>Islands</span>
+                </div>
+                <div class="category-item" data-category="farms">
+                    <i class="fa-solid fa-wheat-awn"></i>
+                    <span>Farms</span>
+                </div>
+            </div>
+
+            <!-- Tax Toggle Switch (Modern Airbnb Signature) -->
+            <div class="tax-toggle-box d-none d-md-flex align-items-center gap-3 flex-shrink-0">
+                <label class="form-check-label fw-bold text-dark small cursor-pointer" for="taxSwitch" style="font-size: 13px;">
+                    Display total before taxes
+                </label>
+                <div class="form-check form-switch m-0">
+                    <input class="form-check-input cursor-pointer" type="checkbox" role="switch" id="taxSwitch" style="width: 2.4em; height: 1.25em;">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 2. MAIN CONTAINER -->
+<div class="container-fluid px-lg-5 px-3 pb-5">
+
+    <!-- Page Title & Header Stats -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1" style="font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.3rem);">
+                Explore Stays Worldwide
+            </h2>
+            <p class="text-secondary small mb-0">
+                Discover <%= listings.length %> handpicked homes, villas & weekend getaways
+            </p>
+        </div>
+
+        <a href="/listings/new" class="btn btn-airbnb rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm">
+            <i class="fa-solid fa-plus"></i> Airbnb your home
+        </a>
+    </div>
+
+    <!-- 3. LISTINGS GRID (Responsive Bootstrap 5 Grid) -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="listingsGrid">
+        <% for(let listing of listings) { %>
+            <div class="col listing-item-col" data-title="<%= listing.title.toLowerCase() %>" data-location="<%= listing.location.toLowerCase() %>">
+                <a href="/listings/<%= listing._id %>" class="listing-card-link">
+                    
+                    <!-- Card Image with Heart & Tag -->
+                    <div class="card-img-wrapper mb-3 shadow-sm">
+                        <img src="<%= listing.image %>" alt="<%= listing.title %>" loading="lazy">
+                        
+                        <!-- Guest Favorite Badge -->
+                        <span class="badge-guest-fav">
+                            <i class="fa-solid fa-award brand-coral me-1"></i> Guest favorite
+                        </span>
+
+                        <!-- Wishlist Heart Button -->
+                        <button type="button" class="wishlist-heart-btn" title="Add to Wishlist" 
+                                onclick="event.preventDefault(); this.classList.toggle('liked'); const icon = this.querySelector('i'); icon.classList.toggle('fa-solid'); icon.classList.toggle('fa-regular');">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                    </div>
+
+                    <!-- Card Body Meta -->
+                    <div>
+                        <!-- Location & Rating -->
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="card-title-clamp" title="<%= listing.title %>">
+                                <%= listing.location %>, <%= listing.country %>
+                            </span>
+                            <span class="d-flex align-items-center gap-1 small fw-bold text-dark">
+                                <i class="fa-solid fa-star text-warning" style="font-size: 12px;"></i>
+                                4.95
+                            </span>
+                        </div>
+
+                        <!-- Distance / Subtitle -->
+                        <div class="text-secondary small mb-2" style="font-size: 13px;">
+                            <%= listing.title %>
+                        </div>
+
+                        <!-- Price Tag with Dynamic Tax Calculation -->
+                        <div class="d-flex align-items-baseline gap-1 text-dark">
+                            <!-- Base Nightly Price -->
+                            <span class="price-base-wrap">
+                                <span class="fw-bold fs-6">&#8377;<%= listing.price ? listing.price.toLocaleString('en-IN') : '0' %></span>
+                                <span class="text-secondary small"> / night</span>
+                            </span>
+
+                            <!-- Total After Taxes (+18% GST) -->
+                            <span class="price-tax-wrap d-none">
+                                <% const withTax = Math.round(listing.price * 1.18); %>
+                                <span class="fw-bold fs-6">&#8377;<%= withTax.toLocaleString('en-IN') %></span>
+                                <span class="text-secondary small"> total after tax</span>
+                            </span>
+                        </div>
+                    </div>
+
+                </a>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Empty State (Shown if filter matches nothing) -->
+    <div id="noResultsState" class="card border rounded-4 p-5 text-center my-5 bg-light d-none">
+        <div class="mb-3 text-secondary fs-1">
+            <i class="fa-solid fa-magnifying-glass-location"></i>
+        </div>
+        <h4 class="fw-bold text-dark mb-2">No stays match your criteria</h4>
+        <p class="text-secondary small mb-4">Try clearing your filters to explore all available properties.</p>
+        <div>
+            <button type="button" class="btn btn-outline-dark rounded-pill px-4 py-2 fw-semibold" id="resetFilterBtn">
+                Reset All Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- 4. AIRBNB YOUR HOME - LUXURY HERO BANNER -->
+    <div class="hero-cta-banner p-md-5 p-4 my-5 shadow-lg">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle px-3 py-2 rounded-pill fw-bold text-uppercase small mb-3">
+                    <i class="fa-solid fa-house-chimney me-1"></i> Hosting Made Simple
+                </span>
+                <h2 class="display-6 fw-bold mb-3" style="font-family: 'Playfair Display', serif;">
+                    Try hosting on Airbnb
+                </h2>
+                <p class="text-light opacity-75 fs-6 mb-4" style="max-width: 600px;">
+                    Join millions of hosts around the world. Earn extra income, meet curious travelers, and share your space with complete peace of mind.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/listings/new" class="btn btn-airbnb rounded-pill px-4 py-3 fw-bold">
+                        Explore Hosting Now
+                    </a>
+                    <a href="#" class="btn btn-outline-light rounded-pill px-4 py-3 fw-semibold">
+                        Learn About AirCover
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center d-none d-lg-block">
+                <div class="bg-white text-dark p-4 rounded-4 shadow-sm text-start" style="max-width: 300px; margin: 0 auto;">
+                    <div class="fw-bold fs-5 mb-1">&#8377;28,450</div>
+                    <small class="text-secondary d-block mb-3">7 nights at an estimated &#8377;4,064 a night</small>
+                    <div class="progress mb-3" style="height: 6px;">
+                        <div class="progress-bar bg-danger" style="width: 75%;"></div>
+                    </div>
+                    <small class="text-muted" style="font-size: 11px;">
+                        <i class="fa-solid fa-shield-heart text-danger me-1"></i> Protected by AirCover for Hosts
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. WHY GUESTS CHOOSE AIRBNB -->
+    <div class="row g-4 pt-4 border-top my-4 text-center text-md-start">
+        <div class="col-md-4">
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-3">
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-dark fs-4 shadow-sm flex-shrink-0" style="width: 54px; height: 54px;">
+                    <i class="fa-solid fa-shield-halved brand-coral"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1 text-dark">Verified Identity</h6>
+                    <small class="text-secondary">Every host and guest identity is verified through comprehensive multi-tier security.</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-3">
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-dark fs-4 shadow-sm flex-shrink-0" style="width: 54px; height: 54px;">
+                    <i class="fa-solid fa-headset brand-coral"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1 text-dark">24/7 Global Support</h6>
+                    <small class="text-secondary">Specially trained friendly support staff available whenever you need assistance.</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-3">
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-dark fs-4 shadow-sm flex-shrink-0" style="width: 54px; height: 54px;">
+                    <i class="fa-solid fa-credit-card brand-coral"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1 text-dark">Secure Payments</h6>
+                    <small class="text-secondary">Pay securely with industry-standard encryption and transparent booking totals.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- JavaScript for Live Taxes Toggle & Category Selection -->
+<script>
+    // 1. Live Tax Toggle Switch (+18% GST)
+    const taxSwitch = document.getElementById('taxSwitch');
+    const basePrices = document.querySelectorAll('.price-base-wrap');
+    const taxPrices = document.querySelectorAll('.price-tax-wrap');
+
+    if (taxSwitch) {
+        taxSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                basePrices.forEach(el => el.classList.add('d-none'));
+                taxPrices.forEach(el => el.classList.remove('d-none'));
+            } else {
+                basePrices.forEach(el => el.classList.remove('d-none'));
+                taxPrices.forEach(el => el.classList.add('d-none'));
+            }
+        });
+    }
+
+    // 2. Category Tab Switching with Filter Animation
+    const categories = document.querySelectorAll('.category-item');
+    const listingCols = document.querySelectorAll('.listing-item-col');
+    const noResultsState = document.getElementById('noResultsState');
+    const resetFilterBtn = document.getElementById('resetFilterBtn');
+
+    categories.forEach(item => {
+        item.addEventListener('click', function() {
+            categories.forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+
+            const selected = this.getAttribute('data-category');
+            let visibleCount = 0;
+
+            listingCols.forEach(col => {
+                const title = col.getAttribute('data-title');
+                const location = col.getAttribute('data-location');
+
+                if (selected === 'all' || title.includes(selected) || location.includes(selected)) {
+                    col.classList.remove('d-none');
+                    visibleCount++;
+                } else {
+                    col.classList.add('d-none');
+                }
+            });
+
+            if (visibleCount === 0) {
+                noResultsState.classList.remove('d-none');
+            } else {
+                noResultsState.classList.add('d-none');
+            }
+        });
+    });
+
+    if (resetFilterBtn) {
+        resetFilterBtn.addEventListener('click', () => {
+            const allTab = document.querySelector('.category-item[data-category="all"]');
+            if (allTab) allTab.click();
+        });
+    }
+</script>
