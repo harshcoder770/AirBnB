@@ -11,9 +11,8 @@ const listingSchema = new mongoose.Schema({
         required: true,
     },
     image: {
-        type: String,
-        default: 'https://a0.muscache.com/im/pictures/542cda48-56f2-4d66-aa82-c842025c8f66.jpg?im_w=720',
-        set: (value) => value === '' ? 'https://a0.muscache.com/im/pictures/542cda48-56f2-4d66-aa82-c842025c8f66.jpg?im_w=720' : value
+        url : String,
+        filename : String,
     },
     price: {
         type: Number,

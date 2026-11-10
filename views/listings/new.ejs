@@ -379,7 +379,7 @@
 
         <!-- Form Card -->
         <div class="form-card">
-            <form action="/listings" method="POST" novalidate class="needs-validation">
+            <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
 
                 <!-- Title -->
                 <div class="form-group">
@@ -409,18 +409,17 @@
                 <!-- Image URL (Optional) -->
                 <div class="form-group">
                     <label for="image">
-                        Image URL <span class="label-optional">(optional)</span>
+                        Image Upload 
                     </label>
-                    <input type="text" id="image" name="listing[image]" placeholder="https://example.com/your-image.jpg" oninput="previewImage(this.value)">
+                    <input type="file" id="image" name="listing[image]" required>
                     <!-- Live Image Preview -->
                        <div class="valid-feedback">
-                        Image URL is optional!.
+                        Image Uploaded Successfully!.
                     </div>
-                    <div class="image-preview" id="imagePreview">
-                        <i class="fa-regular fa-image"></i>
-                        <span>Image preview will appear here</span>
-                        <img src="" alt="Preview" id="previewImg">
+                       <div class="invalid-feedback">
+                        Please Upload Image of the Listing!.
                     </div>
+                  
 
                 </div>
 
@@ -480,20 +479,3 @@
     </div>
 </div>
 
-<!-- Scripts -->
-<script>
-    // 1. Live Image Preview Script
-    function previewImage(url) {
-        const container = document.getElementById('imagePreview');
-        const img = document.getElementById('previewImg');
-        if (url && url.trim() !== '') {
-            img.src = url.trim();
-            img.onload = () => container.classList.add('has-image');
-            img.onerror = () => container.classList.remove('has-image');
-        } else {
-            container.classList.remove('has-image');
-            img.src = '';
-        }
-    }
-  
-</script>

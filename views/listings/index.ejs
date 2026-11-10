@@ -259,7 +259,7 @@
         <% for(let listing of listings) { %>
             <a href="/listings/<%= listing._id %>" class="card">
                 <div class="card-img">
-                    <img src="<%= listing.image %>" alt="<%= listing.title %>" loading="lazy">
+                    <img src="<%= listing.image.url %>" alt="<%= listing.title %>" loading="lazy">
                     <button class="wishlist-btn" onclick="event.preventDefault(); this.querySelector('i').classList.toggle('fa-solid'); this.querySelector('i').classList.toggle('fa-regular');">
                         <i class="fa-regular fa-heart"></i>
                     </button>

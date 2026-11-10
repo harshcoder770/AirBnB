@@ -1,3 +1,8 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
+
 const express = require ('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -14,8 +19,11 @@ const localStarategy = require('passport-local');
 const User = require('./models/user');
 const wrapAsync = require('./utils/wrapAsync');
 const Listing = require('./models/Listing')
+if(process.env.NODE_ENV != 'production'){
+    require('dotenv').config()
 
-
+}
+// console.log(process.env);
 
 
 // Session Configuration
@@ -70,6 +78,7 @@ app.use(passport.session());
 passport.use(new localStarategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
 
 
 
