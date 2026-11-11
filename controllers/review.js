@@ -1,5 +1,5 @@
 const express = require('express');
-const Listing = require('../models/Listing');
+const Listing = require('../models/listing');
 const Review = require('../models/reviews');
 
 
