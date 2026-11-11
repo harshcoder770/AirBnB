@@ -1,6 +1,7 @@
 if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
+const MongoStore = require('connect-mongo').default;
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -19,9 +20,41 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const wrapAsync = require('./utils/wrapAsync');
 
+
+// Connect to MongoDB
+
+main()
+    .then(() => {
+        console.log('Connected to MongoDB');
+    })
+    .catch((err) => {
+        console.log('Error connecting to MongoDB', err);
+    });
+async function main() {
+    await mongoose.connect(process.env.ATLASDB_URL);
+}
+
+
+// Session Configuration
+
+
+// Mongo Session Store Configuration
+const store = MongoStore.create({
+    mongoUrl: process.env.ATLASDB_URL,
+    crypto: {
+        secret: process.env.SECRET,
+    },
+    touchAfter: 24 * 3600,
+});
+
+store.on('error', (err) => {
+    console.log('ERROR in MONGO SESSION STORE:', err);
+});
+
 // Session Configuration
 const sessionOptions = {
-    secret: 'thisshouldbeabettersecret!',
+    store,
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -31,27 +64,15 @@ const sessionOptions = {
     },
 };
 
-// Connect to MongoDB
-async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/airbnb');
-}
-main()
-    .then(() => {
-        console.log('Connected to MongoDB');
-    })
-    .catch((err) => {
-        console.log('Error connecting to MongoDB', err);
-    });
-
 // App & Middleware Configuration
 const app = express();
+app.use(session(sessionOptions));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session(sessionOptions));
 app.use(connectFlash());
 app.use(passport.initialize());
 app.use(passport.session());

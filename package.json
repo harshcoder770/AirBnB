@@ -1,4 +1,7 @@
 {
+  "engines" : {
+    "node" : "26.13.0"
+  },
   "name": "01-airbnb",
   "version": "1.0.0",
   "description": "",
@@ -33,6 +36,7 @@
     "@mapbox/mapbox-sdk": "^0.16.2",
     "cloudinary": "^1.41.3",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^6.0.0",
     "dotenv": "^18.0.10",
     "ejs-mate": "^4.0.0",
     "express": "^5.3.0",
