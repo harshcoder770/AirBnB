@@ -15,12 +15,18 @@ router.route('/login')
     .post(
         passport.authenticate('local', {
             failureRedirect: '/login',
-            failureFlash: true
+            failureFlash: true,
         }),
         userController.login
     );
 
 // Logout Route
 router.get('/logout', userController.logout);
+
+// Profile Route
+router.get('/profile', wrapAsync(userController.profile));
+
+// Favorite Listing Toggle Route
+router.post('/favorites/:id', wrapAsync(userController.toggleFavorite));
 
 module.exports = router;

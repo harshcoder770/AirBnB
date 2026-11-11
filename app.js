@@ -2,8 +2,7 @@ if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
 
-
-const express = require ('express');
+const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const ejsMate = require('ejs-mate');
@@ -12,19 +11,13 @@ const ExpressError = require('./utils/ExpressError');
 const listingsRouter = require('./routes/listings');
 const reviewsRouter = require('./routes/reviews');
 const userRouter = require('./routes/user');
+const listingController = require('./controllers/listing');
 const session = require('express-session');
 const connectFlash = require('connect-flash');
 const passport = require('passport');
-const localStarategy = require('passport-local');
+const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const wrapAsync = require('./utils/wrapAsync');
-const Listing = require('./models/Listing')
-if(process.env.NODE_ENV != 'production'){
-    require('dotenv').config()
-
-}
-// console.log(process.env);
-
 
 // Session Configuration
 const sessionOptions = {
@@ -33,37 +26,24 @@ const sessionOptions = {
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week
-        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-    }
-}
-
-
-
-
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+};
 
 // Connect to MongoDB
-
-async function main(){
+async function main() {
     await mongoose.connect('mongodb://127.0.0.1:27017/airbnb');
 }
-main().then(() => {
-    console.log('Connected to MongoDB');
-}).catch((err) => {
-    console.log('Error connecting to MongoDB', err);
-})
+main()
+    .then(() => {
+        console.log('Connected to MongoDB');
+    })
+    .catch((err) => {
+        console.log('Error connecting to MongoDB', err);
+    });
 
-
-
-
-
-
-
-
-
-
-// Middlewares
-
+// App & Middleware Configuration
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -75,52 +55,40 @@ app.use(session(sessionOptions));
 app.use(connectFlash());
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new localStarategy(User.authenticate()));
+passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
-
-
-
-// Flash Messages Middleware
+// Locals & Flash Messages Middleware
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
-     res.locals.currUser = req.user;
+    res.locals.currUser = req.user;
+    res.locals.searchQuery = req.query.q ? req.query.q.trim() : '';
+    res.locals.activeCategory = req.query.category ? req.query.category.trim() : 'All';
     next();
 });
 
-// all Paths
+// Root Route
+app.get('/', wrapAsync(listingController.index));
 
-app.get('/', wrapAsync(async(req, res) => {
-        const allListings = await Listing.find({});
-    
-    res.render('root', {'listings' : allListings })
-}))
+// Application Routers
 app.use('/', userRouter);
 app.use('/listings', listingsRouter);
 app.use('/listings/:id/reviews', reviewsRouter);
 
-
-
-
-
-
-// Error Handling
-
+// 404 Not Found Handler
 app.use((req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
 });
 
+// Global Error Handler
 app.use((err, req, res, next) => {
-    let {statusCode=500 , message= 'Something went wrong!! Please try again later'} =  err;
-     res.status(statusCode).render('error', { message, err });
-})
+    const { statusCode = 500, message = 'Something went wrong!! Please try again later' } = err;
+    res.status(statusCode).render('error', { message, err });
+});
 
-
-// Start the server
-
+// Start Server
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
-})
+});

@@ -1,3 +1,4 @@
+// Sample listings dataset with categories and GeoJSON coordinates
 const sampleListings = [
   {
     title: "Cozy Beachfront Cottage",
@@ -10,6 +11,11 @@ const sampleListings = [
     price: 1500,
     location: "Malibu",
     country: "United States",
+    category: "Beachfront",
+    geometry: {
+      type: "Point",
+      coordinates: [-118.7798, 34.0259],
+    },
   },
   {
     title: "Modern Loft in Downtown",
@@ -22,6 +28,11 @@ const sampleListings = [
     price: 1200,
     location: "New York City",
     country: "United States",
+    category: "Iconic cities",
+    geometry: {
+      type: "Point",
+      coordinates: [-74.006, 40.7128],
+    },
   },
   {
     title: "Mountain Retreat",
@@ -34,6 +45,11 @@ const sampleListings = [
     price: 1000,
     location: "Aspen",
     country: "United States",
+    category: "Cabins",
+    geometry: {
+      type: "Point",
+      coordinates: [-106.8175, 39.1911],
+    },
   },
   {
     title: "Historic Villa in Tuscany",
@@ -46,6 +62,11 @@ const sampleListings = [
     price: 2500,
     location: "Florence",
     country: "Italy",
+    category: "Mansions",
+    geometry: {
+      type: "Point",
+      coordinates: [11.2558, 43.7696],
+    },
   },
   {
     title: "Secluded Treehouse Getaway",
@@ -58,6 +79,11 @@ const sampleListings = [
     price: 800,
     location: "Portland",
     country: "United States",
+    category: "Camping",
+    geometry: {
+      type: "Point",
+      coordinates: [-122.6765, 45.5152],
+    },
   },
   {
     title: "Beachfront Paradise",
@@ -70,6 +96,11 @@ const sampleListings = [
     price: 2000,
     location: "Cancun",
     country: "Mexico",
+    category: "Beachfront",
+    geometry: {
+      type: "Point",
+      coordinates: [-86.8515, 21.1619],
+    },
   },
   {
     title: "Rustic Cabin by the Lake",
@@ -82,6 +113,11 @@ const sampleListings = [
     price: 900,
     location: "Lake Tahoe",
     country: "United States",
+    category: "Lakefront",
+    geometry: {
+      type: "Point",
+      coordinates: [-120.0324, 39.0968],
+    },
   },
   {
     title: "Luxury Penthouse with City Views",
@@ -94,6 +130,11 @@ const sampleListings = [
     price: 3500,
     location: "Los Angeles",
     country: "United States",
+    category: "Iconic cities",
+    geometry: {
+      type: "Point",
+      coordinates: [-118.2437, 34.0522],
+    },
   },
   {
     title: "Ski-In/Ski-Out Chalet",
@@ -106,6 +147,11 @@ const sampleListings = [
     price: 3000,
     location: "Verbier",
     country: "Switzerland",
+    category: "Arctic",
+    geometry: {
+      type: "Point",
+      coordinates: [7.2286, 46.0961],
+    },
   },
   {
     title: "Safari Lodge in the Serengeti",
@@ -118,6 +164,11 @@ const sampleListings = [
     price: 4000,
     location: "Serengeti National Park",
     country: "Tanzania",
+    category: "Camping",
+    geometry: {
+      type: "Point",
+      coordinates: [34.8333, -2.3333],
+    },
   },
   {
     title: "Historic Canal House",
@@ -130,6 +181,11 @@ const sampleListings = [
     price: 1800,
     location: "Amsterdam",
     country: "Netherlands",
+    category: "Iconic cities",
+    geometry: {
+      type: "Point",
+      coordinates: [4.9041, 52.3676],
+    },
   },
   {
     title: "Private Island Retreat",
@@ -142,6 +198,11 @@ const sampleListings = [
     price: 10000,
     location: "Fiji",
     country: "Fiji",
+    category: "Trending",
+    geometry: {
+      type: "Point",
+      coordinates: [178.065, -17.7134],
+    },
   },
   {
     title: "Charming Cottage in the Cotswolds",
@@ -154,6 +215,11 @@ const sampleListings = [
     price: 1200,
     location: "Cotswolds",
     country: "United Kingdom",
+    category: "Countryside",
+    geometry: {
+      type: "Point",
+      coordinates: [-1.8433, 51.833],
+    },
   },
   {
     title: "Historic Brownstone in Boston",
@@ -166,6 +232,11 @@ const sampleListings = [
     price: 2200,
     location: "Boston",
     country: "United States",
+    category: "Houses",
+    geometry: {
+      type: "Point",
+      coordinates: [-71.0589, 42.3601],
+    },
   },
   {
     title: "Beachfront Bungalow in Bali",
@@ -178,6 +249,11 @@ const sampleListings = [
     price: 1800,
     location: "Bali",
     country: "Indonesia",
+    category: "Amazing pools",
+    geometry: {
+      type: "Point",
+      coordinates: [115.1889, -8.4095],
+    },
   },
   {
     title: "Mountain View Cabin in Banff",
@@ -190,6 +266,11 @@ const sampleListings = [
     price: 1500,
     location: "Banff",
     country: "Canada",
+    category: "Cabins",
+    geometry: {
+      type: "Point",
+      coordinates: [-115.5708, 51.1784],
+    },
   },
   {
     title: "Art Deco Apartment in Miami",
@@ -202,6 +283,11 @@ const sampleListings = [
     price: 1600,
     location: "Miami",
     country: "United States",
+    category: "Trending",
+    geometry: {
+      type: "Point",
+      coordinates: [-80.1918, 25.7617],
+    },
   },
   {
     title: "Tropical Villa in Phuket",
@@ -214,6 +300,11 @@ const sampleListings = [
     price: 3000,
     location: "Phuket",
     country: "Thailand",
+    category: "Amazing pools",
+    geometry: {
+      type: "Point",
+      coordinates: [98.3923, 7.8804],
+    },
   },
   {
     title: "Historic Castle in Scotland",
@@ -226,6 +317,11 @@ const sampleListings = [
     price: 4000,
     location: "Scottish Highlands",
     country: "United Kingdom",
+    category: "Mansions",
+    geometry: {
+      type: "Point",
+      coordinates: [-4.2026, 57.4778],
+    },
   },
   {
     title: "Desert Oasis in Dubai",
@@ -238,6 +334,11 @@ const sampleListings = [
     price: 5000,
     location: "Dubai",
     country: "United Arab Emirates",
+    category: "Amazing pools",
+    geometry: {
+      type: "Point",
+      coordinates: [55.2708, 25.2048],
+    },
   },
   {
     title: "Rustic Log Cabin in Montana",
@@ -250,6 +351,11 @@ const sampleListings = [
     price: 1100,
     location: "Montana",
     country: "United States",
+    category: "Cabins",
+    geometry: {
+      type: "Point",
+      coordinates: [-110.3626, 46.8797],
+    },
   },
   {
     title: "Beachfront Villa in Greece",
@@ -262,6 +368,11 @@ const sampleListings = [
     price: 2500,
     location: "Mykonos",
     country: "Greece",
+    category: "Beachfront",
+    geometry: {
+      type: "Point",
+      coordinates: [25.3289, 37.4467],
+    },
   },
   {
     title: "Eco-Friendly Treehouse Retreat",
@@ -274,6 +385,11 @@ const sampleListings = [
     price: 750,
     location: "Costa Rica",
     country: "Costa Rica",
+    category: "Camping",
+    geometry: {
+      type: "Point",
+      coordinates: [-83.7534, 9.7489],
+    },
   },
   {
     title: "Historic Cottage in Charleston",
@@ -286,6 +402,11 @@ const sampleListings = [
     price: 1600,
     location: "Charleston",
     country: "United States",
+    category: "Houses",
+    geometry: {
+      type: "Point",
+      coordinates: [-79.9311, 32.7765],
+    },
   },
   {
     title: "Modern Apartment in Tokyo",
@@ -298,6 +419,11 @@ const sampleListings = [
     price: 2000,
     location: "Tokyo",
     country: "Japan",
+    category: "Iconic cities",
+    geometry: {
+      type: "Point",
+      coordinates: [139.6917, 35.6895],
+    },
   },
   {
     title: "Lakefront Cabin in New Hampshire",
@@ -310,6 +436,11 @@ const sampleListings = [
     price: 1200,
     location: "New Hampshire",
     country: "United States",
+    category: "Lakefront",
+    geometry: {
+      type: "Point",
+      coordinates: [-71.5724, 43.1939],
+    },
   },
   {
     title: "Luxury Villa in the Maldives",
@@ -322,6 +453,11 @@ const sampleListings = [
     price: 6000,
     location: "Maldives",
     country: "Maldives",
+    category: "Trending",
+    geometry: {
+      type: "Point",
+      coordinates: [73.2207, 3.2028],
+    },
   },
   {
     title: "Ski Chalet in Aspen",
@@ -334,6 +470,11 @@ const sampleListings = [
     price: 4000,
     location: "Aspen",
     country: "United States",
+    category: "Arctic",
+    geometry: {
+      type: "Point",
+      coordinates: [-106.8175, 39.1911],
+    },
   },
   {
     title: "Secluded Beach House in Costa Rica",
@@ -346,7 +487,132 @@ const sampleListings = [
     price: 1800,
     location: "Costa Rica",
     country: "Costa Rica",
+    category: "Beachfront",
+    geometry: {
+      type: "Point",
+      coordinates: [-85.1583, 9.958],
+    },
+  },
+  {
+    title: "Vineyard Farmhouse in Napa Valley",
+    description:
+      "Wake up to rolling vineyard hills in this restored farmhouse estate surrounded by organic gardens.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+    },
+    price: 2800,
+    location: "Napa Valley",
+    country: "United States",
+    category: "Farms",
+    geometry: {
+      type: "Point",
+      coordinates: [-122.2869, 38.2975],
+    },
+  },
+  {
+    title: "Modern Glass Mansion in Beverly Hills",
+    description:
+      "Expansive architectural estate featuring floor-to-ceiling glass walls, landscaped terraces, and a private infinity pool.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 8500,
+    location: "Beverly Hills",
+    country: "United States",
+    category: "Mansions",
+    geometry: {
+      type: "Point",
+      coordinates: [-118.4004, 34.0736],
+    },
+  },
+  {
+    title: "Contemporary Villa in Goa",
+    description:
+      "Bright tropical family house tucked in a quiet lane near the coast with breezy verandas and sunlit living rooms.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+    },
+    price: 3200,
+    location: "Goa",
+    country: "India",
+    category: "Houses",
+    geometry: {
+      type: "Point",
+      coordinates: [73.8278, 15.4909],
+    },
+  },
+  {
+    title: "Nordic Winter Cabin in Tromso",
+    description:
+      "Cozy wooden A-frame cabin deep in the Arctic Circle, ideal for stargazing and watching the Northern Lights.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 2900,
+    location: "Tromso",
+    country: "Norway",
+    category: "Arctic",
+    geometry: {
+      type: "Point",
+      coordinates: [18.9553, 69.6492],
+    },
+  },
+  {
+    title: "Lakefront Heritage Suite in Udaipur",
+    description:
+      "Elegant suite overlooking tranquil waters and historic palaces with modern comforts and timeless Rajasthani charm.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 2600,
+    location: "Udaipur",
+    country: "India",
+    category: "Lakefront",
+    geometry: {
+      type: "Point",
+      coordinates: [73.7125, 24.5854],
+    },
+  },
+  {
+    title: "Organic Homestead in Vermont",
+    description:
+      "Minimalist countryside farm stay surrounded by green pastures, fresh farm produce, and peaceful woodland trails.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 1400,
+    location: "Vermont",
+    country: "United States",
+    category: "Farms",
+    geometry: {
+      type: "Point",
+      coordinates: [-72.5778, 44.5588],
+    },
+  },
+  {
+    title: "Designer Skyline Loft in Stockholm",
+    description:
+      "Warm Scandinavian loft apartment with curated interiors right in the heart of Stockholm's historic islands.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 2400,
+    location: "Stockholm",
+    country: "Sweden",
+    category: "Trending",
+    geometry: {
+      type: "Point",
+      coordinates: [18.0686, 59.3293],
+    },
   },
 ];
 
+// Export listings array for database seeding
 module.exports = { data: sampleListings };

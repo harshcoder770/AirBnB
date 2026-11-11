@@ -1,66 +1,77 @@
 const Listing = require('../models/Listing');
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 
+const mapToken = process.env.MAP_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-
-// index route
+// Index route with search and category filtering
 module.exports.index = async (req, res) => {
-    const allLisitings = await Listing.find({})
-    res.render('listings/index', { listings: allLisitings });
-}
+    const searchQuery = req.query.q ? req.query.q.trim() : '';
+    const selectedCategory = req.query.category ? req.query.category.trim() : 'All';
 
-// new route
+    const queryFilter = {};
+
+    if (selectedCategory && selectedCategory !== 'All') {
+        queryFilter.category = selectedCategory;
+    }
+
+    if (searchQuery) {
+        const searchRegex = new RegExp(escapeRegex(searchQuery), 'i');
+        queryFilter.$or = [
+            { title: searchRegex },
+            { location: searchRegex },
+            { country: searchRegex },
+            { category: searchRegex },
+        ];
+    }
+
+    const listings = await Listing.find(queryFilter);
+    res.render('listings/index', {
+        listings,
+        activeCategory: selectedCategory || 'All',
+        searchQuery,
+    });
+};
+
+// New listing form route
 module.exports.new = (req, res) => {
     if (!req.isAuthenticated()) {
         req.flash('error', 'You must be signed in to create a new listing!');
         return res.redirect('/login');
-
     }
     res.render('listings/new');
-}
+};
 
-// show route
+// Show listing details route
 module.exports.show = async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id).populate({ path: 'reviews', populate: { path: 'user' } }).populate('owner');
+    const listing = await Listing.findById(id)
+        .populate({ path: 'reviews', populate: { path: 'user' } })
+        .populate('owner');
+
     if (!listing) {
-        req.flash('error', 'Listing Does not Exist!');
-        return res.redirect('/listings');
+        req.flash('error', 'Listing does not exist!');
+        return res.redirect('/');
     }
+
     res.render('listings/show', { listing, review: listing.reviews });
-}
+};
 
-// edit route
+// Edit listing form route
 module.exports.edit = async (req, res) => {
-
     if (!req.isAuthenticated()) {
         req.flash('error', 'You must be signed in to edit a listing!');
         return res.redirect('/login');
     }
+
     const { id } = req.params;
     const listing = await Listing.findById(id);
-    if (!listing) {
-        req.flash('error', 'Listing Does not Exist!');
-        return res.redirect('/listings');
-    }
-    if (!listing.owner._id.equals(req.user._id)) {
-        req.flash('error', 'You do not have permission to edit this listing!');
-        return res.redirect(`/listings/${id}`);
-    }
-    res.render('listings/edit', { listing });
-}
 
-// update route 
-module.exports.update = async (req, res) => {
-    if (!req.isAuthenticated()) {
-        req.flash('error', 'You must be signed in to edit a listing!');
-        return res.redirect('/login');
-    }
-    const { id } = req.params;
-    let listing = await Listing.findById(id);
     if (!listing) {
-        req.flash('error', 'Listing Does not Exist!');
-        return res.redirect('/listings');
+        req.flash('error', 'Listing does not exist!');
+        return res.redirect('/');
     }
 
     if (!listing.owner.equals(req.user._id)) {
@@ -68,13 +79,60 @@ module.exports.update = async (req, res) => {
         return res.redirect(`/listings/${id}`);
     }
 
-    // Update text fields
-    let updatedListing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    res.render('listings/edit', { listing });
+};
 
-    if (typeof req.file !== "undefined") {
-        let url = req.file.path;
-        let filename = req.file.filename;
-        updatedListing.image = { url, filename };
+// Update listing route
+module.exports.update = async (req, res) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'You must be signed in to edit a listing!');
+        return res.redirect('/login');
+    }
+
+    const { id } = req.params;
+    const listing = await Listing.findById(id);
+
+    if (!listing) {
+        req.flash('error', 'Listing does not exist!');
+        return res.redirect('/');
+    }
+
+    if (!listing.owner.equals(req.user._id)) {
+        req.flash('error', 'You do not have permission to edit this listing!');
+        return res.redirect(`/listings/${id}`);
+    }
+
+    const updateData = { ...req.body.listing };
+    delete updateData.image;
+
+    const updatedListing = await Listing.findByIdAndUpdate(id, updateData, {
+        new: true,
+        runValidators: true,
+    });
+
+    let needsSave = false;
+
+    if (updateData.location !== listing.location || updateData.country !== listing.country) {
+        const geoResponse = await geocodingClient.forwardGeocode({
+            query: `${updateData.location}, ${updateData.country}`,
+            limit: 1,
+        }).send();
+
+        if (geoResponse.body.features.length > 0) {
+            updatedListing.geometry = geoResponse.body.features[0].geometry;
+            needsSave = true;
+        }
+    }
+
+    if (typeof req.file !== 'undefined') {
+        updatedListing.image = {
+            url: req.file.path,
+            filename: req.file.filename,
+        };
+        needsSave = true;
+    }
+
+    if (needsSave) {
         await updatedListing.save();
     }
 
@@ -82,37 +140,62 @@ module.exports.update = async (req, res) => {
     res.redirect(`/listings/${id}`);
 };
 
-// delete route 
+// Delete listing route
 module.exports.delete = async (req, res) => {
     if (!req.isAuthenticated()) {
         req.flash('error', 'You must be signed in to delete a listing!');
         return res.redirect('/login');
     }
+
     const { id } = req.params;
-    let listing = await Listing.findById(id);
-    if (!listing.owner._id.equals(req.user._id)) {
+    const listing = await Listing.findById(id);
+
+    if (!listing) {
+        req.flash('error', 'Listing does not exist!');
+        return res.redirect('/');
+    }
+
+    if (!listing.owner.equals(req.user._id)) {
         req.flash('error', 'You do not have permission to delete this listing!');
         return res.redirect(`/listings/${id}`);
     }
+
     await Listing.findByIdAndDelete(id);
     req.flash('success', 'Successfully deleted the listing!');
-    res.redirect('/listings');
-}
+    res.redirect('/');
+};
 
-// create route 
+// Create listing route
 module.exports.create = async (req, res) => {
     if (!req.isAuthenticated()) {
         req.flash('error', 'You must be signed in to create a new listing!');
         return res.redirect('/login');
     }
-    let url = req.file.path;
-    let filename = req.file.filename;
+
+    if (!req.file) {
+        req.flash('error', 'Please upload an image for your listing!');
+        return res.redirect('/listings/new');
+    }
+
+    const geoResponse = await geocodingClient.forwardGeocode({
+        query: `${req.body.listing.location}, ${req.body.listing.country}`,
+        limit: 1,
+    }).send();
+
+    if (!geoResponse.body.features.length) {
+        req.flash('error', 'Location could not be found on the map. Please try a more specific city or country.');
+        return res.redirect('/listings/new');
+    }
+
     const newListing = new Listing(req.body.listing);
-    newListing.image = { url, filename }
+    newListing.image = {
+        url: req.file.path,
+        filename: req.file.filename,
+    };
+    newListing.geometry = geoResponse.body.features[0].geometry;
     newListing.owner = req.user._id;
+
     await newListing.save();
     req.flash('success', 'Successfully made a new listing!');
-    res.redirect('/listings');
-
-
-}
+    res.redirect('/');
+};

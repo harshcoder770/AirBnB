@@ -1,18 +1,25 @@
-const Schema = require('mongoose').Schema;
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose').default;
 
-
-const userSchema = new Schema({
-
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    }
-
-});
-
+// User schema with favorite listings and timestamps
+const userSchema = new Schema(
+    {
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        favorites: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Listing',
+            },
+        ],
+    },
+    { timestamps: true }
+);
 
 userSchema.plugin(passportLocalMongoose);
+
 module.exports = mongoose.model('User', userSchema);

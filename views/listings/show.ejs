@@ -1,5 +1,9 @@
 <% layout('/layouts/boilerplate') -%>
 
+<!-- Mapbox GL JS & CSS -->
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+
 <%
     /* Calculate live average rating from actual database reviews */
     const allReviews = (listing.reviews && listing.reviews.length > 0) ? listing.reviews : [];
@@ -11,6 +15,109 @@
 %>
 
 <style>
+        /* ===== LUXURY AIRBNB MAP POPUP STYLES ===== */
+    .mapboxgl-popup {
+        max-width: 250px !important;
+    }
+    .mapboxgl-popup-content {
+        border-radius: 16px !important;
+        padding: 0 !important;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        font-family: 'DM Sans', sans-serif;
+    }
+    .mapboxgl-popup-close-button {
+        top: 8px !important;
+        right: 8px !important;
+        width: 26px;
+        height: 26px;
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(4px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        color: #222222;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        border: none;
+        outline: none;
+        z-index: 10;
+        transition: transform 0.15s ease;
+    }
+    .mapboxgl-popup-close-button:hover {
+        transform: scale(1.1);
+        background: #ffffff !important;
+    }
+    .popup-card-img-wrap {
+        position: relative;
+        width: 100%;
+        height: 120px;
+        background: #f0f0f0;
+    }
+    .popup-card-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .popup-rating-badge {
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(4px);
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #1a1a2e;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+    .popup-card-body {
+        padding: 12px 14px 14px;
+    }
+    .popup-card-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .popup-card-location {
+        font-size: 12px;
+        color: #717171;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .popup-card-footer {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        border-top: 1px solid #f0f0f0;
+        padding-top: 8px;
+    }
+    .popup-card-price {
+        font-size: 13px;
+        color: #1a1a2e;
+    }
+    .popup-card-price strong {
+        font-weight: 700;
+        font-size: 14px;
+    }
+    .popup-note-tag {
+        font-size: 10px;
+        color: #FF385C;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
     .show-page-wrapper {
         max-width: 1120px;
         margin: 0 auto;
@@ -46,13 +153,25 @@
     .sticky-card {
         top: 100px;
     }
+    /* Responsive Map Container */
+    #map {
+        width: 100%;
+        height: 420px;
+        border-radius: 16px;
+    }
+    .mapboxgl-popup-content {
+        border-radius: 12px;
+        padding: 14px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        font-family: 'DM Sans', sans-serif;
+    }
 </style>
 
 <div class="container show-page-wrapper py-4">
 
     <!-- 1. Back Link -->
     <div class="mb-3">
-        <a href="/listings" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fw-semibold">
+        <a href="/" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fw-semibold">
             <i class="fa-solid fa-arrow-left me-1"></i> All Listings
         </a>
     </div>
@@ -78,7 +197,7 @@
 
     <!-- 3. Hero Image -->
     <div class="mb-4 overflow-hidden rounded-4 shadow-sm bg-light">
-        <img src="<%= listing.image.url %>" alt="<%= listing.title %>" class="listing-hero-img d-block" loading="lazy">
+        <img src="<%= (listing.image && listing.image.url) ? listing.image.url : listing.image %>" alt="<%= listing.title %>" class="listing-hero-img d-block" loading="lazy">
     </div>
 
     <!-- 4. Host Controls (Edit / Delete) -->
@@ -165,15 +284,6 @@
                 </p>
             </div>
 
-            <!-- Location Details -->
-            <div class="pt-3 border-top">
-                <h5 class="fw-bold text-dark mb-2" style="font-family: 'DM Sans', sans-serif;">Where you'll be</h5>
-                <p class="text-secondary small mb-0">
-                    <i class="fa-solid fa-map-location-dot text-danger me-1"></i>
-                    <%= listing.location %>, <%= listing.country %>
-                </p>
-            </div>
-
         </div>
 
         <!-- Right Column: Sticky Booking Card -->
@@ -217,8 +327,20 @@
 
     </div>
 
-    <!-- 6. Reviews Section (FULL WIDTH) -->
-    <div class="pt-5 border-top">
+    <!-- 6. MAP SECTION (Where you'll be) -->
+    <div class="pt-5 border-top mb-5">
+        <h4 class="fw-bold text-dark mb-1" style="font-family: 'DM Sans', sans-serif;">Where you'll be</h4>
+        <p class="text-secondary small mb-3">
+            <i class="fa-solid fa-location-dot text-danger me-1"></i>
+            <%= listing.location %>, <%= listing.country %>
+        </p>
+        <div class="shadow-sm rounded-4 overflow-hidden border">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <!-- 7. Reviews Section -->
+    <div class="pt-4 border-top">
         
         <!-- Header -->
         <div class="d-flex align-items-center gap-2 mb-4">
@@ -286,7 +408,7 @@
             </div>
         <% } %>
 
-        <!-- Reviews Grid (2 balanced columns across full width) -->
+        <!-- Reviews Grid -->
         <% if (allReviews.length > 0) { %>
             <div class="row g-4">
                 <% allReviews.forEach(function(review) { %>
@@ -314,7 +436,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Delete Review Trigger (Only for Review Author) -->
+                                <!-- Delete Review Trigger -->
                                 <% if (currUser && review.user && currUser._id.equals(review.user._id || review.user)) { %>
                                     <button type="button" class="btn btn-sm btn-outline-danger border-0 rounded-circle p-2 open-delete-review-btn" 
                                             data-review-id="<%= review._id %>" title="Delete Review">
@@ -361,7 +483,7 @@
 
 </div>
 
-<!-- 7. Bootstrap Modal: Delete Listing -->
+<!-- 8. Bootstrap Modal: Delete Listing -->
 <div class="modal fade" id="deleteListingModal" tabindex="-1" aria-labelledby="deleteListingModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
         <div class="modal-content rounded-4 border-0 shadow">
@@ -384,7 +506,7 @@
     </div>
 </div>
 
-<!-- 8. Bootstrap Modal: Delete Review -->
+<!-- 9. Bootstrap Modal: Delete Review -->
 <div class="modal fade" id="deleteReviewModal" tabindex="-1" aria-labelledby="deleteReviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
         <div class="modal-content rounded-4 border-0 shadow">
@@ -409,7 +531,60 @@
 
 <!-- Scripts -->
 <script>
-    // 1. Interactive Star Rating Selector
+    // 1. Mapbox Map Rendering with Safe Coordinate Fallback
+    (function() {
+        const mapToken = "<%= process.env.MAP_TOKEN %>";
+        mapboxgl.accessToken = mapToken;
+
+        // Default to New Delhi coordinates [lng, lat] if listing has no geometry yet
+        const coordinates = <%- JSON.stringify(listing.geometry && listing.geometry.coordinates && listing.geometry.coordinates.length ? listing.geometry.coordinates : [77.2090, 28.6139]) %>;
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: coordinates, // [lng, lat]
+            zoom: 10
+        });
+
+        // Add Zoom Controls
+        map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+        // Add Coral Marker with Popup
+               // Airbnb Mini Preview Card Popup
+        const popup = new mapboxgl.Popup({ offset: 25, closeButton: true })
+            .setHTML(`
+                <div class="popup-card">
+                    <div class="popup-card-img-wrap">
+                        <img src="<%= (listing.image && listing.image.url) ? listing.image.url : listing.image %>" alt="<%= listing.title %>">
+                        <span class="popup-rating-badge">
+                            <i class="fa-solid fa-star text-warning" style="font-size: 10px;"></i>
+                            <%= allReviews.length > 0 ? avgRating : 'New' %>
+                        </span>
+                    </div>
+                    <div class="popup-card-body">
+                        <div class="popup-card-title" title="<%= listing.title %>"><%= listing.title %></div>
+                        <div class="popup-card-location">
+                            <i class="fa-solid fa-location-dot text-danger" style="font-size: 11px;"></i>
+                            <%= listing.location %>, <%= listing.country %>
+                        </div>
+                        <div class="popup-card-footer">
+                            <div class="popup-card-price">
+                                <strong>&#8377;<%= listing.price ? listing.price.toLocaleString('en-IN') : '0' %></strong>
+                                <span class="text-muted" style="font-size: 11px;">/ night</span>
+                            </div>
+                            <span class="popup-note-tag">Exact on booking</span>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+        new mapboxgl.Marker({ color: '#FF385C' })
+            .setLngLat(coordinates)
+            .setPopup(popup)
+            .addTo(map);
+    })();
+
+    // 2. Interactive Star Rating Selector
     (function() {
         const starContainer = document.getElementById('starContainer');
         const ratingInput = document.getElementById('ratingInput');
@@ -460,7 +635,7 @@
         updateStars(currentRating);
     })();
 
-    // 2. Review Delete Modal Handler (Native Bootstrap Modal)
+    // 3. Review Delete Modal Handler
     document.addEventListener('DOMContentLoaded', function() {
         const deleteReviewForm = document.getElementById('deleteReviewForm');
         const deleteReviewBtns = document.querySelectorAll('.open-delete-review-btn');
@@ -480,7 +655,7 @@
         });
     });
 
-    // 3. Form Validation Script
+    // 4. Form Validation Script
     (() => {
         'use strict';
         const forms = document.querySelectorAll('.needs-validation');

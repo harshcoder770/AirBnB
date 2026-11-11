@@ -20,7 +20,7 @@
         position: relative;
     }
 
-    /* ===== LOGO ===== */
+    /* Logo */
     .nav-logo {
         display: flex;
         align-items: center;
@@ -46,43 +46,75 @@
         letter-spacing: -0.5px;
     }
 
-    /* ===== SEARCH PILL ===== */
+    /* Search Pill Form */
     .nav-search {
         display: flex;
         align-items: center;
+        flex: 1;
+        max-width: 440px;
+        min-width: 0;
         background: #ffffff;
         border: 1px solid #dddddd;
         border-radius: 40px;
-        padding: 6px 8px 6px 18px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-        cursor: pointer;
-        transition: box-shadow 0.2s ease;
-        flex-shrink: 1;
+        padding: 5px 6px 5px 18px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
     .nav-search:hover {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
     }
 
-    .search-segment {
+    .nav-search:focus-within {
+        border-color: #FF385C;
+        box-shadow: 0 2px 10px rgba(255, 56, 92, 0.16);
+    }
+
+    .nav-search-input {
+        flex: 1;
+        min-width: 0;
+        border: none;
+        outline: none;
+        background: transparent;
         font-family: 'DM Sans', sans-serif;
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 500;
         color: #222222;
-        padding: 0 12px;
-        border-right: 1px solid #e0e0e0;
-        white-space: nowrap;
+        padding: 6px 8px 6px 0;
     }
 
-    .search-segment.light {
+    .nav-search-input::placeholder {
         color: #717171;
         font-weight: 400;
-        border-right: none;
+    }
+
+    .nav-search-input::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+    }
+
+    .search-clear-btn {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #717171;
+        text-decoration: none;
+        font-size: 12px;
+        margin-right: 4px;
+        flex-shrink: 0;
+        transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .search-clear-btn:hover {
+        background: #f2f2f2;
+        color: #222222;
     }
 
     .search-icon-btn {
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
         border-radius: 50%;
         background: linear-gradient(135deg, #FF385C, #D70466);
         color: #ffffff;
@@ -92,14 +124,19 @@
         border: none;
         cursor: pointer;
         flex-shrink: 0;
-        margin-left: 4px;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .search-icon-btn:hover {
+        transform: scale(1.05);
+        opacity: 0.95;
     }
 
     .search-icon-btn i {
-        font-size: 11px;
+        font-size: 13px;
     }
 
-    /* ===== USER ACTIONS (RIGHT) ===== */
+    /* User Actions */
     .nav-actions {
         display: flex;
         align-items: center;
@@ -124,7 +161,6 @@
         background: #f7f7f7;
     }
 
-    /* Menu Pill Button */
     .nav-user-pill {
         display: flex;
         align-items: center;
@@ -157,10 +193,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        font-family: 'DM Sans', sans-serif;
         font-size: 13px;
+        font-weight: 700;
     }
 
-    /* ===== DROPDOWN PANEL ===== */
+    .user-avatar-circle.logged-in {
+        background: linear-gradient(135deg, #FF385C, #D70466);
+    }
+
+    /* Dropdown Panel */
     .user-dropdown-menu {
         position: absolute;
         top: calc(100% + 10px);
@@ -171,7 +213,7 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         border: 1px solid #eeeeee;
         padding: 8px 0;
-        display: none; /* Controlled by JS */
+        display: none;
         flex-direction: column;
         z-index: 1100;
         animation: dropDownSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -208,6 +250,17 @@
         background: #f7f7f7;
     }
 
+    .dropdown-user-badge {
+        padding: 10px 18px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a1a2e;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
     .dropdown-item.bold-text {
         font-weight: 700;
     }
@@ -218,21 +271,10 @@
         margin: 6px 0;
     }
 
-    /* ===== RESPONSIVE MEDIA QUERIES (Fixes 770px - 810px overflow) ===== */
-    
-    /* Tablet range: 769px to 950px */
+    /* Responsive Media Queries */
     @media (max-width: 950px) {
         .airbnb-navbar {
-            padding: 0 20px;
-        }
-
-        /* Hide the 3rd search segment earlier so it never breaks screen */
-        .search-segment.light {
-            display: none;
-        }
-
-        .search-segment:nth-child(2) {
-            border-right: none;
+            padding: 0 24px;
         }
 
         .nav-host-btn {
@@ -241,38 +283,35 @@
         }
     }
 
-    /* Small Tablet range: 768px to 850px */
-    @media (max-width: 850px) {
-        .search-segment:nth-child(2) {
-            display: none;
-        }
-
-        .search-segment {
-            border-right: none;
-            padding: 0 8px;
-        }
-
-        .nav-logo span {
-            font-size: 18px;
-        }
-    }
-
-    /* Mobile: 768px and down */
     @media (max-width: 768px) {
         .airbnb-navbar {
-            padding: 0 16px;
+            padding: 0 14px;
         }
 
         .navbar-inner {
             height: 68px;
+            gap: 10px;
         }
 
         .nav-logo span {
-            display: none; /* Icon only */
+            display: none;
         }
 
         .nav-host-btn {
-            display: none; /* Moved inside the user dropdown */
+            display: none;
+        }
+
+        .nav-search {
+            padding: 4px 5px 4px 14px;
+        }
+
+        .nav-search-input {
+            font-size: 13px;
+        }
+
+        .search-icon-btn {
+            width: 32px;
+            height: 32px;
         }
     }
 </style>
@@ -281,38 +320,46 @@
 <nav class="airbnb-navbar">
     <div class="navbar-inner">
 
-        <!-- Logo -->
-        <a href="/listings" class="nav-logo">
+        <a href="/" class="nav-logo">
             <i class="fa-brands fa-airbnb"></i>
             <span>airbnb</span>
         </a>
 
-        <!-- Search Bar -->
-        <div class="nav-search">
-            <span class="search-segment">Anywhere</span>
-            <span class="search-segment">Any week</span>
-            <span class="search-segment light">Add guests</span>
-            <button class="search-icon-btn" aria-label="Search">
+        <form action="/" method="GET" class="nav-search" role="search">
+            <input
+                type="search"
+                name="q"
+                class="nav-search-input"
+                placeholder="Search destinations, stays, or categories..."
+                value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+                aria-label="Search stays"
+            >
+            <% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
+                <a href="/" class="search-clear-btn" aria-label="Clear search">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+            <% } %>
+            <button type="submit" class="search-icon-btn" aria-label="Search">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
-        </div>
+        </form>
 
-        <!-- Right Side: Create Listing + User Menu -->
         <div class="nav-actions">
             <a href="/listings/new" class="nav-host-btn">Airbnb your home</a>
-            
-            <!-- User Menu Pill Button -->
+
             <div class="nav-user-pill" id="userMenuBtn">
                 <i class="fa-solid fa-bars"></i>
-                <div class="user-avatar-circle">
-                    <i class="fa-solid fa-user"></i>
+                <div class="user-avatar-circle <%= currUser ? 'logged-in' : '' %>">
+                    <% if (currUser && currUser.username) { %>
+                        <%= currUser.username.charAt(0).toUpperCase() %>
+                    <% } else { %>
+                        <i class="fa-solid fa-user"></i>
+                    <% } %>
                 </div>
             </div>
 
-                       <!-- Floating Side Dropdown Panel -->
             <div class="user-dropdown-menu" id="userDropdown">
                 <% if (!currUser) { %>
-                    <!-- Logged Out State -->
                     <a href="/signup" class="dropdown-item bold-text">
                         <i class="fa-regular fa-user" style="width: 16px;"></i> Sign up
                     </a>
@@ -320,9 +367,8 @@
                         <i class="fa-solid fa-arrow-right-to-bracket" style="width: 16px;"></i> Log in
                     </a>
                 <% } else { %>
-                    <!-- Logged In State -->
-                    <a href="/profile" class="dropdown-item bold-text">
-                        <i class="fa-regular fa-user" style="width: 16px;"></i> Profile (<%= currUser.username %>)
+                                        <a href="/profile" class="dropdown-item bold-text">
+                        <i class="fa-regular fa-user" style="width: 16px;"></i> @<%= currUser.username %>
                     </a>
                     <a href="/logout" class="dropdown-item">
                         <i class="fa-solid fa-arrow-right-from-bracket" style="width: 16px;"></i> Log out
@@ -333,44 +379,38 @@
                 <a href="/listings/new" class="dropdown-item">
                     <i class="fa-solid fa-house-chimney" style="width: 16px;"></i> Airbnb your home
                 </a>
-                <a href="/listings" class="dropdown-item">
-                    <i class="fa-solid fa-list" style="width: 16px;"></i> Explore listings
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fa-regular fa-circle-question" style="width: 16px;"></i> Help Centre
+                <a href="/" class="dropdown-item">
+                    <i class="fa-solid fa-compass" style="width: 16px;"></i> Explore stays
                 </a>
             </div>
         </div>
 
-  
     </div>
 </nav>
 
-<!-- JavaScript to control the menu -->
+<!-- Dropdown Menu Toggle Script -->
 <script>
-    (function() {
+    (function () {
         const menuBtn = document.getElementById('userMenuBtn');
         const dropdown = document.getElementById('userDropdown');
 
         if (!menuBtn || !dropdown) return;
 
-        // Toggle open/close on pill click
-        menuBtn.addEventListener('click', function(e) {
+        menuBtn.addEventListener('click', function (e) {
             e.stopPropagation();
-            const isOpen = dropdown.classList.contains('show');
-            if (isOpen) {
+            dropdown.classList.toggle('show');
+            menuBtn.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!dropdown.contains(e.target) && !menuBtn.contains(e.target)) {
                 dropdown.classList.remove('show');
                 menuBtn.classList.remove('active');
-            } else {
-                dropdown.classList.add('show');
-                menuBtn.classList.add('active');
             }
         });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!dropdown.contains(e.target) && !menuBtn.contains(e.target)) {
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
                 dropdown.classList.remove('show');
                 menuBtn.classList.remove('active');
             }

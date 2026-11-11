@@ -7,12 +7,23 @@ const listingSchema = Joi.object({
         description: Joi.string().required(),
         location: Joi.string().required(),
         country: Joi.string().required(),
+        category: Joi.string().valid(
+            "Trending",
+            "Amazing pools",
+            "Houses",
+            "Mansions",
+            "Beachfront",
+            "Cabins",
+            "Iconic cities",
+            "Lakefront",
+            "Countryside",
+            "Camping",
+            "Arctic",
+            "Farms"
+        ).required(),
         image: Joi.string().allow('', null),
-        
     }).required()
 });
-
-
 
 const reviewSchema = Joi.object({
     review: Joi.object({

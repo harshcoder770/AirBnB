@@ -1,35 +1,43 @@
 const mongoose = require("mongoose");
-const path = require("path");
 const Listing = require("../models/Listing");
+const Review = require("../models/reviews");
+const User = require("../models/user");
 const data = require("./data");
 
+const MONGO_URL = "mongodb://127.0.0.1:27017/airbnb";
 
-
-async function main(){
-    await mongoose.connect('mongodb://127.0.0.1:27017/airbnb');
-}
-main().then(() => {
-    console.log('Connected to MongoDB');
-}).catch((err) => {
-    console.log('Error connecting to MongoDB', err);
-})
-
-
-
+// Connect to MongoDB and re-seed all listings cleanly
 const initListings = async () => {
     try {
-        await Listing.deleteMany({});
-        console.log('Existing listings deleted successfully');
-    } catch (err) {
-        console.error('Error deleting existing listings:', err);
-    }
-    try {
-        data.data = data.data.map((listing) => ({...listing, owner: '6af17d9d287fbe7889e35ae0' }));
-        await Listing.insertMany(data.data);
-        console.log('Listings inserted successfully');
-    } catch (err) {
-        console.error('Error inserting listings:', err);
-    }
+        await mongoose.connect(MONGO_URL);
+        console.log("Connected to MongoDB");
 
-}
+        await Listing.deleteMany({});
+        await Review.deleteMany({});
+        console.log("Cleared existing listings and reviews");
+
+        let owner = await User.findOne({});
+        if (!owner) {
+            const demoUser = new User({
+                email: "host@airbnb.com",
+                username: "airbnb_host",
+            });
+            owner = await User.register(demoUser, "host1234");
+            console.log("Created default host account:", owner.username);
+        }
+
+        const seededListings = data.data.map((listing) => ({
+            ...listing,
+            owner: owner._id,
+        }));
+
+        await Listing.insertMany(seededListings);
+        console.log(`Inserted ${seededListings.length} listings for owner: ${owner.username}`);
+    } catch (err) {
+        console.error("Error initializing database:", err);
+    } finally {
+        await mongoose.connection.close();
+    }
+};
+
 initListings();

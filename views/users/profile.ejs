@@ -1,0 +1,629 @@
+<% layout('/layouts/boilerplate') -%>
+
+<style>
+    /* Profile Page Layout */
+    .profile-wrapper {
+        min-height: calc(100vh - 80px);
+        background: linear-gradient(135deg, #fafafa 0%, #f6f2fb 50%, #fdf0f4 100%);
+        padding: 36px 24px 64px;
+    }
+
+    .profile-container {
+        max-width: 1120px;
+        margin: 0 auto;
+    }
+
+    .profile-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: #555555;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 7px 14px;
+        border-radius: 999px;
+        background: #ffffff;
+        border: 1px solid #e6e6e6;
+        margin-bottom: 24px;
+        transition: all 0.2s ease;
+    }
+
+    .profile-back-btn:hover {
+        color: #FF385C;
+        border-color: #FF385C;
+        background: #fff5f7;
+    }
+
+    /* Profile Hero Card */
+    .profile-hero-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        border: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        flex-wrap: wrap;
+        margin-bottom: 36px;
+    }
+
+    .profile-identity {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
+    .profile-avatar-lg {
+        position: relative;
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FF385C, #D70466);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 38px;
+        font-weight: 800;
+        box-shadow: 0 10px 24px rgba(255, 56, 92, 0.28);
+        flex-shrink: 0;
+    }
+
+    .profile-verified-badge {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #1a1a2e;
+        color: #ffffff;
+        border: 3px solid #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+    }
+
+    .profile-name {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(26px, 3vw, 34px);
+        font-weight: 800;
+        color: #1a1a2e;
+        margin: 0 0 4px;
+    }
+
+    .profile-email {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        color: #666666;
+        margin: 0 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .profile-meta-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .profile-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #f8f9fa;
+        border: 1px solid #eeeeee;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #333333;
+    }
+
+    .profile-stats-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 16px;
+    }
+
+    .profile-stats-row {
+        display: flex;
+        gap: 14px;
+    }
+
+    .profile-stat-box {
+        min-width: 112px;
+        padding: 12px 16px;
+        border-radius: 16px;
+        background: #fafafa;
+        border: 1px solid #eeeeee;
+        text-align: center;
+    }
+
+    .profile-stat-value {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 22px;
+        font-weight: 800;
+        color: #1a1a2e;
+        line-height: 1.1;
+    }
+
+    .profile-stat-label {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        color: #717171;
+        margin-top: 4px;
+    }
+
+    .profile-action-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-coral {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #FF385C, #D70466);
+        color: #ffffff;
+        text-decoration: none;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13.5px;
+        font-weight: 700;
+        box-shadow: 0 4px 14px rgba(255, 56, 92, 0.25);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-coral:hover {
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(255, 56, 92, 0.35);
+    }
+
+    .btn-light-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: #ffffff;
+        border: 1px solid #dddddd;
+        color: #222222;
+        text-decoration: none;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13.5px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .btn-light-outline:hover {
+        border-color: #1a1a2e;
+        color: #1a1a2e;
+        background: #f8f9fa;
+    }
+
+    /* Section Header */
+    .profile-section {
+        margin-bottom: 40px;
+    }
+
+    .section-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+        font-weight: 800;
+        color: #1a1a2e;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-count-pill {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #fff1f3;
+        color: #FF385C;
+    }
+
+    /* Profile Listing Cards */
+    .profile-listing-card {
+        background: #ffffff;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #eeeeee;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .profile-listing-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-card-media {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        background: #f2f2f2;
+    }
+
+    .profile-card-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .unlike-form {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 2;
+    }
+
+    .unlike-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.94);
+        color: #FF385C;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .unlike-btn:hover {
+        transform: scale(1.1);
+        background: #ffffff;
+    }
+
+    .profile-card-cat {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        background: rgba(255, 255, 255, 0.92);
+        color: #1a1a2e;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 999px;
+    }
+
+    .profile-card-body {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .profile-card-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .profile-card-loc {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .profile-card-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 13px;
+        color: #717171;
+        margin-bottom: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .profile-card-footer {
+        margin-top: auto;
+        padding-top: 10px;
+        border-top: 1px solid #f2f2f2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .profile-card-price {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 800;
+        color: #1a1a2e;
+    }
+
+    .profile-card-price span {
+        font-size: 12px;
+        font-weight: 400;
+        color: #717171;
+    }
+
+    .profile-empty-card {
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px dashed #dddddd;
+        padding: 44px 24px;
+        text-align: center;
+    }
+
+    .profile-empty-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: #fff1f3;
+        color: #FF385C;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin-bottom: 14px;
+    }
+
+    /* Responsive Media Queries */
+    @media (max-width: 768px) {
+        .profile-wrapper {
+            padding: 24px 14px 48px;
+        }
+
+        .profile-hero-card {
+            padding: 24px 20px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .profile-stats-actions {
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .profile-stats-row {
+            width: 100%;
+        }
+
+        .profile-stat-box {
+            flex: 1;
+        }
+
+        .profile-action-row {
+            width: 100%;
+        }
+
+        .profile-action-row a {
+            flex: 1;
+            justify-content: center;
+        }
+    }
+</style>
+
+<%
+    const avatarInitial = user && user.username ? user.username.charAt(0).toUpperCase() : 'U';
+    const joinedDate = user && user.createdAt
+        ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+        : 'Airbnb Member';
+%>
+
+<div class="profile-wrapper">
+    <div class="profile-container">
+
+        <a href="/" class="profile-back-btn">
+            <i class="fa-solid fa-arrow-left"></i> Back to Stays
+        </a>
+
+        <!-- Profile Header Card -->
+        <div class="profile-hero-card">
+            <div class="profile-identity">
+                <div class="profile-avatar-lg">
+                    <%= avatarInitial %>
+                    <span class="profile-verified-badge" title="Verified account">
+                        <i class="fa-solid fa-check"></i>
+                    </span>
+                </div>
+
+                <div>
+                    <h1 class="profile-name">@<%= user.username %></h1>
+                    <p class="profile-email">
+                        <i class="fa-regular fa-envelope text-danger"></i>
+                        <%= user.email %>
+                    </p>
+                    <div class="profile-meta-chips">
+                        <span class="profile-chip">
+                            <i class="fa-regular fa-calendar text-danger"></i> Joined <%= joinedDate %>
+                        </span>
+                        <span class="profile-chip">
+                            <i class="fa-solid fa-shield-halved text-danger"></i> Verified Account
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-stats-actions">
+                <div class="profile-stats-row">
+                    <div class="profile-stat-box">
+                        <div class="profile-stat-value"><%= favoriteListings.length %></div>
+                        <div class="profile-stat-label">Favorites</div>
+                    </div>
+                    <div class="profile-stat-box">
+                        <div class="profile-stat-value"><%= hostedListings.length %></div>
+                        <div class="profile-stat-label">Hosted Stays</div>
+                    </div>
+                </div>
+
+                <div class="profile-action-row">
+                    <a href="/listings/new" class="btn-coral">
+                        <i class="fa-solid fa-plus"></i> Airbnb your home
+                    </a>
+                    <a href="/logout" class="btn-light-outline">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Log out
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Favorite Listings Section -->
+        <div class="profile-section">
+            <div class="section-title-row">
+                <h2 class="section-title">
+                    <i class="fa-solid fa-heart text-danger"></i> Favorite Listings
+                    <span class="section-count-pill"><%= favoriteListings.length %></span>
+                </h2>
+            </div>
+
+            <% if (favoriteListings.length === 0) { %>
+                <div class="profile-empty-card">
+                    <div class="profile-empty-icon">
+                        <i class="fa-regular fa-heart"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">No favorite stays saved yet</h5>
+                    <p class="text-secondary small mb-4">
+                        Tap the heart icon on any stay while exploring to save it right here.
+                    </p>
+                    <a href="/" class="btn-coral">Explore Stays</a>
+                </div>
+            <% } else { %>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+                    <% for (let listing of favoriteListings) { %>
+                        <%
+                            const imageUrl = (listing.image && listing.image.url) ? listing.image.url : listing.image;
+                        %>
+                        <div class="col">
+                            <div class="profile-listing-card">
+                                <div class="profile-card-media">
+                                    <a href="/listings/<%= listing._id %>">
+                                        <img src="<%= imageUrl %>" alt="<%= listing.title %>" loading="lazy">
+                                    </a>
+                                    <form action="/favorites/<%= listing._id %>" method="POST" class="unlike-form">
+                                        <button type="submit" class="unlike-btn" title="Remove from favorites" aria-label="Remove from favorites">
+                                            <i class="fa-solid fa-heart"></i>
+                                        </button>
+                                    </form>
+                                    <span class="profile-card-cat"><%= listing.category || 'Trending' %></span>
+                                </div>
+
+                                <div class="profile-card-body">
+                                    <a href="/listings/<%= listing._id %>" class="profile-card-link">
+                                        <div class="profile-card-loc">
+                                            <i class="fa-solid fa-location-dot text-danger me-1"></i>
+                                            <%= listing.location %>, <%= listing.country %>
+                                        </div>
+                                        <div class="profile-card-title"><%= listing.title %></div>
+                                    </a>
+                                    <div class="profile-card-footer">
+                                        <div class="profile-card-price">
+                                            &#8377;<%= listing.price ? listing.price.toLocaleString('en-IN') : '0' %> <span>/ night</span>
+                                        </div>
+                                        <a href="/listings/<%= listing._id %>" class="text-danger fw-bold small text-decoration-none">
+                                            View <i class="fa-solid fa-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Hosted Listings Section -->
+        <div class="profile-section">
+            <div class="section-title-row">
+                <h2 class="section-title">
+                    <i class="fa-solid fa-house-chimney text-dark"></i> Your Hosted Listings
+                    <span class="section-count-pill"><%= hostedListings.length %></span>
+                </h2>
+            </div>
+
+            <% if (hostedListings.length === 0) { %>
+                <div class="profile-empty-card">
+                    <div class="profile-empty-icon">
+                        <i class="fa-solid fa-house-circle-check"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">You haven't hosted any stays yet</h5>
+                    <p class="text-secondary small mb-4">
+                        List your space and start welcoming travelers from around the world.
+                    </p>
+                    <a href="/listings/new" class="btn-coral">Create Listing</a>
+                </div>
+            <% } else { %>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+                    <% for (let listing of hostedListings) { %>
+                        <%
+                            const imageUrl = (listing.image && listing.image.url) ? listing.image.url : listing.image;
+                        %>
+                        <div class="col">
+                            <div class="profile-listing-card">
+                                <div class="profile-card-media">
+                                    <a href="/listings/<%= listing._id %>">
+                                        <img src="<%= imageUrl %>" alt="<%= listing.title %>" loading="lazy">
+                                    </a>
+                                    <span class="profile-card-cat"><%= listing.category || 'Trending' %></span>
+                                </div>
+
+                                <div class="profile-card-body">
+                                    <a href="/listings/<%= listing._id %>" class="profile-card-link">
+                                        <div class="profile-card-loc">
+                                            <i class="fa-solid fa-location-dot text-danger me-1"></i>
+                                            <%= listing.location %>, <%= listing.country %>
+                                        </div>
+                                        <div class="profile-card-title"><%= listing.title %></div>
+                                    </a>
+                                    <div class="profile-card-footer">
+                                        <div class="profile-card-price">
+                                            &#8377;<%= listing.price ? listing.price.toLocaleString('en-IN') : '0' %> <span>/ night</span>
+                                        </div>
+                                        <div class="d-flex gap-3 small fw-bold">
+                                            <a href="/listings/<%= listing._id %>/edit" class="text-dark text-decoration-none">Edit</a>
+                                            <a href="/listings/<%= listing._id %>" class="text-danger text-decoration-none">View</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+
+    </div>
+</div>

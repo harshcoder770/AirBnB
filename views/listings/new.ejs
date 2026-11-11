@@ -1,7 +1,7 @@
 <% layout('/layouts/boilerplate') -%>
 
 <style>
-    /* ===== PAGE WRAPPER ===== */
+    /* Page Wrapper */
     .new-listing-wrapper {
         min-height: calc(100vh - 80px);
         background: linear-gradient(135deg, #fafafa 0%, #f4effa 50%, #fdedf2 100%);
@@ -30,7 +30,7 @@
         }
     }
 
-    /* ===== BACK BUTTON ===== */
+    /* Back Button */
     .back-btn {
         display: inline-flex;
         align-items: center;
@@ -56,7 +56,7 @@
         transform: translateX(-3px);
     }
 
-    /* ===== HEADER ===== */
+    /* Header */
     .form-header {
         margin-bottom: 28px;
     }
@@ -90,7 +90,7 @@
         line-height: 1.6;
     }
 
-    /* ===== FORM CARD ===== */
+    /* Form Card */
     .form-card {
         background: #ffffff;
         border-radius: 20px;
@@ -99,7 +99,7 @@
         box-sizing: border-box;
     }
 
-    /* ===== FORM GROUPS ===== */
+    /* Form Groups */
     .form-group {
         margin-bottom: 24px;
     }
@@ -113,15 +113,9 @@
         margin-bottom: 8px;
     }
 
-    .label-optional {
-        font-weight: 400;
-        font-size: 12px;
-        color: #888888;
-        margin-left: 4px;
-    }
-
     .form-group input,
-    .form-group textarea {
+    .form-group textarea,
+    .form-group select {
         width: 100%;
         padding: 13px 16px;
         font-size: 14px;
@@ -131,14 +125,24 @@
         outline: none;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
         color: #1a1a2e;
-        background: #fafafa;
+        background-color: #fafafa;
         box-sizing: border-box;
     }
 
+    .form-group select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23717171' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        padding-right: 40px;
+    }
+
     .form-group input:focus,
-    .form-group textarea:focus {
+    .form-group textarea:focus,
+    .form-group select:focus {
         border-color: #FF385C;
-        background: #ffffff;
+        background-color: #ffffff;
         box-shadow: 0 0 0 4px rgba(255, 56, 92, 0.08);
     }
 
@@ -161,25 +165,26 @@
         padding-left: 2px;
     }
 
-    /* ===== BOOTSTRAP CLIENT VALIDATION OVERRIDES ===== */
-    /* When form is submitted and has .was-validated */
+    /* Bootstrap Validation Overrides */
     .was-validated .form-group input:invalid,
-    .was-validated .form-group textarea:invalid {
+    .was-validated .form-group textarea:invalid,
+    .was-validated .form-group select:invalid {
         border-color: #dc3545 !important;
         background-color: #fff9f9 !important;
         box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.12) !important;
     }
 
     .was-validated .form-group input:valid,
-    .was-validated .form-group textarea:valid {
+    .was-validated .form-group textarea:valid,
+    .was-validated .form-group select:valid {
         border-color: #198754 !important;
         background-color: #f9fffb !important;
         box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.12) !important;
     }
 
-    /* Validation feedback message styling */
     .was-validated input:invalid ~ .invalid-feedback,
-    .was-validated textarea:invalid ~ .invalid-feedback {
+    .was-validated textarea:invalid ~ .invalid-feedback,
+    .was-validated select:invalid ~ .invalid-feedback {
         display: block !important;
         font-family: 'DM Sans', sans-serif;
         font-size: 13px;
@@ -190,7 +195,8 @@
     }
 
     .was-validated input:valid ~ .valid-feedback,
-    .was-validated textarea:valid ~ .valid-feedback {
+    .was-validated textarea:valid ~ .valid-feedback,
+    .was-validated select:valid ~ .valid-feedback {
         display: block !important;
         font-family: 'DM Sans', sans-serif;
         font-size: 13px;
@@ -200,14 +206,14 @@
         padding-left: 2px;
     }
 
-    /* ===== TWO-COLUMN ROW ===== */
+    /* Two-Column Row */
     .form-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 18px;
     }
 
-    /* ===== PRICE INPUT WITH PREFIX ===== */
+    /* Price Input Prefix */
     .input-prefix {
         position: relative;
     }
@@ -228,7 +234,7 @@
         padding-left: 30px !important;
     }
 
-    /* ===== SECTION DIVIDER ===== */
+    /* Section Divider */
     .section-divider {
         display: flex;
         align-items: center;
@@ -253,11 +259,11 @@
         letter-spacing: 1.5px;
     }
 
-    /* ===== IMAGE PREVIEW BOX ===== */
+    /* Image Preview Box */
     .image-preview {
-        margin-top: 10px;
+        margin-top: 12px;
         width: 100%;
-        height: 150px;
+        height: 160px;
         border-radius: 12px;
         border: 2px dashed #e0e0e0;
         display: flex;
@@ -302,7 +308,7 @@
         display: block;
     }
 
-    /* ===== SUBMIT BUTTON ===== */
+    /* Submit Button */
     .submit-btn {
         width: 100%;
         padding: 15px;
@@ -341,7 +347,7 @@
         transform: translateX(4px);
     }
 
-    /* ===== RESPONSIVE MEDIA QUERIES ===== */
+    /* Responsive Media Queries */
     @media (max-width: 600px) {
         .new-listing-wrapper {
             padding: 24px 16px 40px;
@@ -358,7 +364,7 @@
         }
 
         .image-preview {
-            height: 130px;
+            height: 140px;
         }
     }
 </style>
@@ -366,109 +372,99 @@
 <div class="new-listing-wrapper">
     <div class="form-container">
 
-        <!-- Back Button -->
-        <a href="/listings" class="back-btn">
+        <a href="/" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i> All Listings
         </a>
 
-        <!-- Header -->
         <div class="form-header">
             <h1>Create a New Listing</h1>
             <p>Share your space with travelers from around the world. Fill in the details below to publish your place.</p>
         </div>
 
-        <!-- Form Card -->
         <div class="form-card">
             <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
 
-                <!-- Title -->
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" id="title" name="listing[title]" placeholder="e.g. Cozy Beachfront Cottage" required>
-                    <div class="invalid-feedback">
-                        Please add a little Title.
-                    </div>
-                    <div class="valid-feedback">
-                        Title looks good!
-                    </div>
+                    <div class="invalid-feedback">Please add a Title.</div>
+                    <div class="valid-feedback">Title looks good!</div>
                     <p class="helper-text">Catchy and descriptive names attract more guests.</p>
                 </div>
 
-                <!-- Description -->
                 <div class="form-group">
                     <label for="description">Description</label>
                     <textarea id="description" name="listing[description]" placeholder="Tell guests what makes your place special, the amenities available, and what the neighbourhood is like..." required></textarea>
-                    <div class="invalid-feedback">
-                        Please add a little Description.
-                    </div>
-                    <div class="valid-feedback">
-                        Description looks good!
-                    </div>
+                    <div class="invalid-feedback">Please add a Description.</div>
+                    <div class="valid-feedback">Description looks good!</div>
                 </div>
 
-                <!-- Image URL (Optional) -->
                 <div class="form-group">
-                    <label for="image">
-                        Image Upload 
-                    </label>
-                    <input type="file" id="image" name="listing[image]" required>
-                    <!-- Live Image Preview -->
-                       <div class="valid-feedback">
-                        Image Uploaded Successfully!.
+                    <label for="image">Upload Image</label>
+                    <input type="file" id="image" name="listing[image]" accept="image/*" required>
+                    <div class="valid-feedback">Image selected!</div>
+                    <div class="invalid-feedback">Please upload an image for the listing.</div>
+                    <div class="image-preview" id="imagePreviewBox">
+                        <i class="fa-regular fa-image"></i>
+                        <span>Image preview will appear here</span>
+                        <img id="imagePreviewImg" src="" alt="Preview">
                     </div>
-                       <div class="invalid-feedback">
-                        Please Upload Image of the Listing!.
-                    </div>
-                  
-
                 </div>
 
                 <div class="section-divider">
-                    <span>Pricing & Location</span>
+                    <span>Pricing, Category & Location</span>
                 </div>
 
-                <!-- Price + Country Row -->
                 <div class="form-row">
                     <div class="form-group">
                         <label for="price">Price per Night</label>
                         <div class="input-prefix">
-                            <span class="prefix-symbol">₹</span>
-                            <input type="number" id="price" name="listing[price]" placeholder="1,500" min="0" required>
-                            <div class="invalid-feedback">
-                                Please add a Price.
-                            </div>
-                              <div class="valid-feedback">
-                                Price looks good!
-                            </div>
+                            <span class="prefix-symbol">&#8377;</span>
+                            <input type="number" id="price" name="listing[price]" placeholder="1500" min="0" required>
+                            <div class="invalid-feedback">Please add a Price.</div>
+                            <div class="valid-feedback">Price looks good!</div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="country">Country</label>
                         <input type="text" id="country" name="listing[country]" placeholder="e.g. India" required>
-                        <div class="invalid-feedback">
-                            Please add a Country.
-                        </div>
-                        <div class="valid-feedback">
-                            Country looks good!
-                        </div>
+                        <div class="invalid-feedback">Please add a Country.</div>
+                        <div class="valid-feedback">Country looks good!</div>
                     </div>
                 </div>
 
-                <!-- Location -->
-                <div class="form-group">
-                    <label for="location">Location</label>
-                    <input type="text" id="location" name="listing[location]" placeholder="e.g. Malibu, California or Mumbai" required>
-                    <div class="invalid-feedback">
-                        Please add a Location.
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" name="listing[location]" placeholder="e.g. Goa or Malibu" required>
+                        <div class="invalid-feedback">Please add a Location.</div>
+                        <div class="valid-feedback">Location looks good!</div>
+                        <p class="helper-text">City, district, or area for map placement.</p>
                     </div>
-                    <div class="valid-feedback">
-                        Location looks good!
+
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" name="listing[category]" required>
+                            <option value="" selected disabled>Select a category</option>
+                            <option value="Trending">Trending</option>
+                            <option value="Amazing pools">Amazing pools</option>
+                            <option value="Houses">Houses</option>
+                            <option value="Mansions">Mansions</option>
+                            <option value="Beachfront">Beachfront</option>
+                            <option value="Cabins">Cabins</option>
+                            <option value="Iconic cities">Iconic cities</option>
+                            <option value="Lakefront">Lakefront</option>
+                            <option value="Countryside">Countryside</option>
+                            <option value="Camping">Camping</option>
+                            <option value="Arctic">Arctic</option>
+                            <option value="Farms">Farms</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a Category.</div>
+                        <div class="valid-feedback">Category looks good!</div>
                     </div>
-                    <p class="helper-text">City, district, or area to help travelers find your listing.</p>
                 </div>
 
-                <!-- Submit Button -->
                 <button type="submit" class="submit-btn">
                     Create Listing
                     <i class="fa-solid fa-arrow-right"></i>
@@ -479,3 +475,25 @@
     </div>
 </div>
 
+<script>
+    const imageInput = document.getElementById('image');
+    const previewBox = document.getElementById('imagePreviewBox');
+    const previewImg = document.getElementById('imagePreviewImg');
+
+    if (imageInput) {
+        imageInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                    previewBox.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewImg.src = '';
+                previewBox.classList.remove('has-image');
+            }
+        });
+    }
+</script>

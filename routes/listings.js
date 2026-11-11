@@ -8,29 +8,31 @@ const { storage } = require('../cloudConfig.js');
 const upload = multer({ storage });
 const { listingSchema } = require('../schema.js');
 
-// Validation middleware for listings
+// Validate listing request body with Joi
 const validateListing = (req, res, next) => {
     const { error } = listingSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',');
         throw new ExpressError(msg, 400);
-    } else {
-        next();
     }
+    next();
 };
 
-// 1. Index & Create Routes
-router.route('/')
-    .get(wrapAsync(listingController.index))
-    .post(upload.single('listing[image]'), validateListing, wrapAsync(listingController.create));
+// Create listing route
+router.post(
+    '/',
+    upload.single('listing[image]'),
+    validateListing,
+    wrapAsync(listingController.create)
+);
 
-// 2. New Route (Must be before /:id)
+// New listing form route
 router.get('/new', listingController.new);
 
-// 3. Edit Form Route
+// Edit listing form route
 router.get('/:id/edit', wrapAsync(listingController.edit));
 
-// 4. Show, Update & Delete Routes
+// Show, Update & Delete listing routes
 router.route('/:id')
     .get(wrapAsync(listingController.show))
     .put(upload.single('listing[image]'), validateListing, wrapAsync(listingController.update))
