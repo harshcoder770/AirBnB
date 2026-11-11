@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const Listing = require('../models/Listing');
+const Listing = require('../models/listing');
 
 // Render Signup Form
 module.exports.renderSignupForm = (req, res) => {
